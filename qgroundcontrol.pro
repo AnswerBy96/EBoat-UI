@@ -52,7 +52,7 @@ LinuxBuild {
 }
 
 WindowsBuild {
-    RC_ICONS = resources/icons/qgroundcontrol.ico
+    RC_ICONS = custom/res/Icons/AIRS-EBOAT.ico
     CONFIG += resources_big
 }
 
@@ -60,9 +60,9 @@ WindowsBuild {
 # Branding
 #
 
-QGC_APP_NAME        = "QGroundControl"
-QGC_ORG_NAME        = "QGroundControl.org"
-QGC_ORG_DOMAIN      = "org.qgroundcontrol"
+QGC_APP_NAME        = "AIRS-EBOAT"
+QGC_ORG_NAME        = "eboat.org"
+QGC_ORG_DOMAIN      = "org.eboat"
 QGC_APP_DESCRIPTION = "Open source ground control app provided by QGroundControl dev team"
 QGC_APP_COPYRIGHT   = "Copyright (C) 2019 QGroundControl Development Team. All rights reserved."
 
