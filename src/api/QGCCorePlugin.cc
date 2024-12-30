@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -27,6 +27,10 @@
 
 #include <QtQml>
 #include <QQmlEngine>
+
+#ifndef APP_VERSION_STR
+#define APP_VERSION_STR 0.0.7354
+#endif
 
 /// @file
 ///     @brief Core Plugin Interface for QGroundControl - Default Implementation
@@ -379,6 +383,7 @@ QQmlApplicationEngine* QGCCorePlugin::createQmlApplicationEngine(QObject* parent
 void QGCCorePlugin::createRootWindow(QQmlApplicationEngine* qmlEngine)
 {
     qmlEngine->load(QUrl(QStringLiteral("qrc:/qml/MainRootWindow.qml")));
+    qmlEngine->load(QUrl(QStringLiteral("qrc:/qml/EBoat/EBoat3DModel.qml")));
 }
 
 bool QGCCorePlugin::mavlinkMessage(Vehicle* vehicle, LinkInterface* link, mavlink_message_t message)

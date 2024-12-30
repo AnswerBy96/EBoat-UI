@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -19,6 +19,8 @@ import QGroundControl.Controls      1.0
 import QGroundControl.ScreenTools   1.0
 import QGroundControl.FlightDisplay 1.0
 import QGroundControl.FlightMap     1.0
+
+import EBoat 1.0
 
 /// @brief Native QML top level window
 /// All properties defined here are visible to all QML pages.
@@ -259,17 +261,28 @@ ApplicationWindow {
         anchors.fill:   parent
     }
 
+    EBoatLeftPanel {
+        id:         _leftPanel
+        width:      parent.width * (2/5)
+        height:     parent.height
+        x:          0
+        z:          2
+    }
+
     //-------------------------------------------------------------------------
     /// Toolbar
     header: MainToolBar {
         id:         toolbar
         height:     ScreenTools.toolbarHeight
-        visible:    !(QGroundControl.videoManager.fullScreen && flightView.visible)
+        //visible:    !(QGroundControl.videoManager.fullScreen && flightView.visible)
+        visible:    false
     }
 
     footer: LogReplayStatusBar {
         visible: QGroundControl.settingsManager.flyViewSettings.showLogReplayStatusBar.rawValue
     }
+
+
 
     function showToolSelectDialog() {
         if (!mainWindow.preventViewSwitch()) {
@@ -428,7 +441,10 @@ ApplicationWindow {
 
     FlyView {
         id:             flightView
-        anchors.fill:   parent
+        anchors.left:   _leftPanel.right
+        anchors.right:  parent.right
+        anchors.top:    parent.top
+        anchors.bottom: parent.bottom
     }
 
     PlanView {

@@ -1,0 +1,4 @@
+﻿Module EBoat
+
+EBoatLeftPanel          1.0          EBoatLeftPanel.qml
+EBoat3DModel            1.0          EBoat3DModel.qml

@@ -256,7 +256,12 @@ QT += \
     widgets \
     xml \
     texttospeech \
-    core-private
+    core-private\
+    core \
+    3dquick \
+    3dquickrender\
+    quick3d
+
 
 # Multimedia only used if QVC is enabled
 !contains (DEFINES, QGC_DISABLE_UVC) {
