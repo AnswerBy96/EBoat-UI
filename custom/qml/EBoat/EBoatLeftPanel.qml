@@ -8,8 +8,13 @@ import QGroundControl.Palette 1.0
 import QGroundControl.Controls 1.0
 import QtQuick.Extras 1.4
 
+
+
 Rectangle {
-    id: rect
+    id: leftpanel
+    color: "#000000"
+    border.color: "#000000"
+    z: 1
 
     Image {
         source: "/res/background1"
@@ -17,9 +22,608 @@ Rectangle {
         fillMode: Image.Stretch
     }
 
+    property int swictchBtnState: 0
+    property int settingBtnState: 0
+    property int cameraBtnState: 0
+
+    property int autoModeState:   0
+    property int manualModeState: 0
+    property int remoteModeState: 0
+
+    function switchbtnclicked(){
+        if(swictchBtnState == 0)
+        {
+            _model3D.boatAnimation(swictchBtnState);
+            boatbackgrounddisappear.running = false;
+            boatbackgroundappear.running = true;
+            swictchBtnState = 1;
+            switchbtnimage.source = "/res/Start-Green"
+        }
+        else
+        {
+            _model3D.boatAnimation(swictchBtnState);
+            boatbackgrounddisappear.running = true;
+            boatbackgroundappear.running = false;
+            swictchBtnState = 0;
+            switchbtnimage.source = "/res/Start-White"
+        }
+    }
+
+    function settingbtnclicked()
+    {
+        if(settingBtnState == 0)
+        {
+            settingBtnState = 1;
+            settingbtnimage.source = "/res/Setting-Green"
+        }
+
+        else
+        {
+            settingBtnState = 0;
+            settingbtnimage.source = "/res/Setting-White"
+        }
+    }
+
+    function camerabtnclicked()
+    {
+        if(cameraBtnState == 0)
+        {
+            cameraBtnState = 1;
+            camerabtnimage.source = "/res/Camera-Green"
+        }
+
+        else
+        {
+            cameraBtnState = 0;
+            camerabtnimage.source = "/res/Camera-White"
+        }
+    }
+
+    function automodeclicked(){
+        if(autoModeState == 0)
+        {
+            manualmodeclickeffect.opacity = 0;
+            manualModeState = 0;
+
+            remotemodeclickeffect.opacity = 0;
+            remoteModeState = 0;
+
+            automodeclickeffect.opacity = 0.8;
+            autoModeState = 1;
+
+
+            modetext.text = "Auto Mode";
+            modetext.opacity = 1;
+        }
+        else
+        {
+            automodeclickeffect.opacity = 0;
+            autoModeState = 0;
+            modetext.opacity = 0;
+        }
+    }
+
+    function manualmodeclicked(){
+        if(manualModeState == 0)
+        {
+            automodeclickeffect.opacity = 0;
+            autoModeState = 0;
+
+            remotemodeclickeffect.opacity = 0;
+            remoteModeState = 0;
+
+            manualmodeclickeffect.opacity = 0.8;
+            manualModeState = 1;
+
+            modetext.text = "Manual Mode";
+            modetext.opacity = 1;
+        }
+        else
+        {
+            manualmodeclickeffect.opacity = 0;
+            manualModeState = 0;
+            modetext.opacity = 0;
+        }
+    }
+
+    function remotemodeclicked(){
+        if(remoteModeState == 0)
+        {
+            automodeclickeffect.opacity = 0;
+            autoModeState = 0;
+
+            manualmodeclickeffect.opacity = 0;
+            manualModeState = 0;
+
+            remotemodeclickeffect.opacity = 0.8;
+            remoteModeState = 1;
+
+            modetext.text = "Remote Mode";
+            modetext.opacity = 1;
+        }
+        else
+        {
+            remotemodeclickeffect.opacity = 0;
+            remoteModeState = 0;
+            modetext.opacity = 0;
+        }
+    }
+
+    Image {
+        id: yachtlogo
+        source: "/res/yachtlogo"
+        anchors.top: leftpanel.top
+        anchors.leftMargin: -59
+        anchors.topMargin: -62
+        anchors.left: leftpanel.left
+        fillMode: Image.PreserveAspectFit
+        scale: 0.2
+        z: 3
+    }
+
+    Text {
+        id: modetext
+        anchors.centerIn: yachtlogo.Center
+        anchors.left: yachtlogo.right
+        anchors.top: yachtlogo.top
+        anchors.leftMargin: -72
+        anchors.topMargin: 89
+        color: "#0cb2fa"
+        text: qsTr("Manual Mode")
+        font.pixelSize: 17
+        font.family: "Verdana"
+        font.styleName: "Regular"
+        font.bold: true
+        opacity: 0
+    }
+
+    Text {
+        id: heading
+        anchors.horizontalCenter: leftpanel.horizontalCenter
+        anchors.top: leftpanel.top
+        anchors.topMargin: 20
+        font.family: "Courier New"
+        font.bold: true
+        font.pixelSize: 25
+        anchors.horizontalCenterOffset: 320
+        color: "#ffffff"
+        text: qsTr("- NE -")
+    }
+
+    Image {
+        id: headinglogo
+        anchors.top: heading.bottom
+        anchors.topMargin: 0
+        anchors.right: leftpanel.right
+        anchors.rightMargin: 28
+        width: 40
+        height: 40
+        source: "/res/headinglogo"
+        fillMode: Image.PreserveAspectFit
+    }
+
+    Text {
+        id: mph
+        visible: true
+        color: "#ffffff"
+        text: "56"
+        font.family: "Microsoft JhengHei UI"
+        font.bold: true
+        font.pointSize: 70
+        anchors.horizontalCenter: leftpanel.horizontalCenter
+        anchors.bottom: seperator.top
+        anchors.bottomMargin: 30
+        font.weight: Font.Normal
+    }
+
+    Text {
+        id: mphLable
+        text: qsTr("MPH")
+        font.family: "Verdana"
+        font.bold: true
+        font.pixelSize: 16
+        anchors.horizontalCenter: leftpanel.horizontalCenter
+        anchors.bottom: seperator.top
+        anchors.bottomMargin: 10
+        color: "#ffffff"
+    }
+
+    Rectangle {
+        id: seperator
+        height: 2.5
+        width: parent.width
+        anchors.top: leftpanel.top
+        anchors.topMargin: leftpanel.height / 4
+        anchors.horizontalCenter: leftpanel.horizontalCenter
+        border.width: 1
+        border.color: "black"
+
+        LinearGradient {
+            anchors.fill: parent
+            start: Qt.point(0, 0)
+            end: Qt.point(width, 0) //横向渐变
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.0
+                    color: "black"
+                }
+                GradientStop {
+                    position: 0.33
+                    color: "white"
+                }
+                GradientStop {
+                    position: 0.66
+                    color: "white"
+                }
+                GradientStop {
+                    position: 1.0
+                    color: "black"
+                }
+            }
+        }
+    }
+
+    Column {
+        id: modecol
+        anchors.horizontalCenter: leftpanel.horizontalCenter // 水平居中对齐
+        anchors.verticalCenter: leftpanel.verticalCenter
+        anchors.verticalCenterOffset: 0
+        anchors.horizontalCenterOffset: -284
+        spacing: 50 // 子元素间的间距
+        z: 3
+        Rectangle {
+            id: automode
+            width: 105
+            height: 105
+            opacity: 1
+            color: "#363836"
+            radius: 20
+            border.color: "#363836"
+            border.width: 2
+
+            Image {
+                width: 65
+                height: 65
+                source: "/res/Auto-White"
+                anchors.verticalCenterOffset: -17
+                anchors.horizontalCenterOffset: 1
+                fillMode: Image.PreserveAspectFit
+                anchors.centerIn: parent
+            }
+
+            Text {
+                text: "Auto Mode"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.bottom
+                anchors.topMargin: -25
+                font.family: "Verdana"
+                font.bold: true
+                color: "white"
+                font.pointSize: 7
+            }
+
+            Rectangle {
+                id: automodeclickeffect
+                anchors.fill: parent
+                color: "#414958"
+                //color: "transparent"
+                opacity: 0 // 初始透明度为 0
+                radius: parent.radius
+                border.color: "#168bf7"
+                border.width: 4
+            }
+
+            MouseArea {
+                id: automodemouseArea
+                anchors.fill: parent
+                onClicked: {
+                    automodeclicked();
+                }
+            }
+        }
+
+        Rectangle {
+            id: manualmode
+            width: 105
+            height: 105
+            color: "#363836"
+            radius: 20
+            border.color: "#363836"
+            border.width: 2
+
+            Image {
+                width: 65
+                height: 65
+                source: "/res/Manual-White"
+                anchors.verticalCenterOffset: -12
+                anchors.horizontalCenterOffset: 1
+                fillMode: Image.PreserveAspectFit
+                anchors.centerIn: parent
+            }
+
+            Text {
+                text: "Manual Mode"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.bottom
+                anchors.topMargin: -25
+                font.family: "Verdana"
+                anchors.horizontalCenterOffset: 0
+                font.bold: true
+                color: "white"
+                font.pointSize: 7
+            }
+
+            Rectangle {
+                id: manualmodeclickeffect
+                anchors.fill: parent
+                color: "#414958"
+                //color: "transparent"
+                opacity: 0 // 初始透明度为 0
+                radius: parent.radius
+                border.color: "#168bf7"
+                border.width: 4
+            }
+
+            MouseArea {
+                id: manualmodemouseArea
+                anchors.fill: parent
+                onClicked: {
+                    manualmodeclicked();
+                }
+            }
+        }
+
+        Rectangle {
+            id: remotemode
+            width: 105
+            height: 105
+            color: "#363836"
+            radius: 20
+            border.color: "#363836"
+            border.width: 2
+
+            Image {
+                width: 65
+                height: 65
+                source: "/res/Remote-White"
+                anchors.verticalCenterOffset: -12
+                anchors.horizontalCenterOffset: 1
+                fillMode: Image.PreserveAspectFit
+                anchors.centerIn: parent
+            }
+
+            Text {
+                text: "Remote Mode"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.bottom
+                anchors.topMargin: -25
+                font.family: "Verdana"
+                anchors.horizontalCenterOffset: 0
+                font.bold: true
+                color: "white"
+                font.pointSize: 7
+            }
+
+            Rectangle {
+                id: remotemodeclickeffect
+                anchors.fill: parent
+                color: "#414958"
+                //color: "transparent"
+                opacity: 0 // 初始透明度为 0
+                radius: parent.radius
+                border.color: "#168bf7"
+                border.width: 4
+            }
+
+            MouseArea {
+                id: remotemodemouseArea
+                anchors.fill: parent
+                onClicked: {
+                    remotemodeclicked();
+                }
+            }
+        }
+    }
+
+
+    Column {
+        id: btncol
+        anchors.horizontalCenter: leftpanel.horizontalCenter // 水平居中对齐
+        anchors.verticalCenter: leftpanel.verticalCenter
+        anchors.verticalCenterOffset: 0
+        anchors.horizontalCenterOffset: 303
+        spacing: 80 // 子元素间的间距
+
+        Button {
+            id: settingbtn
+            width: 65
+            height: 65
+            background: Image {
+                id: settingbtnimage
+                source: "/res/Setting-White"
+                fillMode: Image.PreserveAspectFit
+            }
+            onClicked:{
+                settingbtnclicked();
+            }
+        }
+
+        Button {
+            id: camerabtn
+            width: 65
+            height: 65
+            background: Image {
+                id: camerabtnimage
+                source: "/res/Camera-White"
+                fillMode: Image.PreserveAspectFit
+            }
+            onClicked:{
+                camerabtnclicked();
+            }
+        }
+        Button {
+            id: switchbtn
+            width: 65
+            height: 65
+            background: Image {
+                id: switchbtnimage
+                source: "/res/Start-White"
+                fillMode: Image.PreserveAspectFit
+            }
+            onClicked: {
+                switchbtnclicked();
+            }
+        }
+        z: 3
+    }
+
+
     EBoat3DModel {
         id: _model3D
         anchors.fill: parent
-        visible: true
+        visible:true
+        scale: 0.8
+        z:3
+
     }
+
+    Image {
+        id: boatbackground
+        anchors.centerIn: leftpanel
+        source: "/res/ocean"
+        anchors.verticalCenterOffset: 11
+        anchors.horizontalCenterOffset: -11
+        fillMode: Image.PreserveAspectCrop
+        opacity: 0
+        scale: 1.1
+        z: 2
+
+        NumberAnimation {
+            id: boatbackgroundappear
+            target: boatbackground
+            property: "opacity"
+            running: false
+            duration: 1500
+            to: 1
+            from: 0
+        }
+
+        NumberAnimation {
+            id: boatbackgrounddisappear
+            target: boatbackground
+            property: "opacity"
+            running: false
+            duration: 1500
+            to: 0
+            from: 1
+        }
+    }
+
+
+    Rectangle {
+        id: gearrect
+        width: 400
+        height: 100
+        radius: 50
+        border.color: "#ffffff"
+        border.width: 3
+        color: "transparent"
+        anchors.centerIn: gearRow
+    }
+
+    Row {
+        id: gearRow
+        anchors.horizontalCenter: leftpanel.horizontalCenter // 水平居中对齐
+        anchors.bottom: leftpanel.bottom // 底部对齐
+        anchors.bottomMargin: 160
+        spacing: 50 // 子元素间的间距
+
+        Text {
+            id: gearp
+            font.family: "Courier New"
+            font.bold: true
+            font.pixelSize: 50
+            color: "#ffffff"
+            text: qsTr("P")
+        }
+
+        Text {
+            id: gearr
+            font.family: "Courier New"
+            font.bold: true
+            font.pixelSize: 50
+            color: "#ffffff"
+            text: qsTr("R")
+        }
+
+        Text {
+            id: gearn
+            font.family: "Courier New"
+            font.bold: true
+            font.pixelSize: 50
+            color: "#ffffff"
+            text: qsTr("N")
+        }
+
+        Text {
+            id: geard
+            font.family: "Courier New"
+            font.bold: true
+            font.pixelSize: 50
+            color: "#ffffff"
+            text: qsTr("D")
+        }
+    }
+
+
+    property int batteryLevel: 70
+
+    Rectangle {
+        id: batteryContainer
+        width: 125
+        height: 15
+        border.color: "black"
+        border.width: 2
+        radius: 20
+        anchors.left: leftpanel.left
+        anchors.leftMargin: 77
+        anchors.bottom: leftpanel.bottom
+        anchors.bottomMargin: 35
+
+        // 电池内部填充区域
+        Rectangle {
+            id: batteryLevelDisplay
+            width: batteryContainer.width * batteryLevel / 100
+            height: batteryContainer.height * 0.75
+            radius: 20
+            // 低于20%时显示红色
+            color: batteryLevel > 20 ? "#33de33" : "#f50e42"
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        // 显示电量百分比的文本
+        Text {
+            id: batteryText
+            font.family: "Microsoft JhengHei UI"
+            font.bold: true
+            anchors.left: parent.right
+            anchors.leftMargin: 20
+            anchors.verticalCenter: parent.verticalCenter
+            font.pixelSize: 25
+            color: "white"
+            text: batteryLevel + "%"
+        }
+    }
+
+    Image {
+        id: charginglogo
+        source: "/res/Charging-White"
+        fillMode: Image.PreserveAspectFit
+        scale: 0.5
+        anchors.left: leftpanel.left
+        anchors.bottom: leftpanel.bottom
+        anchors.verticalCenter: batteryContainer.verticalCenter
+    }
+
 }

@@ -20,6 +20,20 @@ View3D{
             clearColor: "transparent"
         }
 
+        function boatAnimation(swtichbtnstate)
+        {
+            if(swtichbtnstate === 0)
+            {
+                startanimation.running = true;
+                endanimation.running = false;
+            }
+            else
+            {
+                endanimation.running = true;
+                startanimation.running = false
+            }
+        }
+
         Node {
             id: rootNode
             Node {
@@ -521,8 +535,25 @@ View3D{
                 }
             }
 
+            NumberAnimation {
+                id: startanimation
+                target: body_model
+                property: "eulerRotation.x"
+                running: false
+                duration: 1500
+                to: 30
+                from: 90
+            }
 
-
+            NumberAnimation {
+                id: endanimation
+                target: body_model
+                property: "eulerRotation.x"
+                running: false
+                duration: 1500
+                to: 90
+                from: 30
+            }
         }
 
 }

@@ -59,6 +59,20 @@
 		<file alias="GripperRelease.svg">../resources/GripperRelease.svg</file>
 		<file alias="GripperGrab.svg">../resources/GripperGrab.svg</file>
                 <file alias="background1">res/Images/background1.png</file>
+                <file alias="yachtlogo">res/Images/yacht.svg</file>
+                <file alias="Auto-White">res/Images/Auto-White.svg</file>
+                <file alias="Manual-White">res/Images/Manual-White.svg</file>
+                <file alias="Remote-White">res/Images/Remote-White.svg</file>
+                <file alias="Camera-Green">res/Images/Camera-Green.svg</file>
+                <file alias="Camera-White">res/Images/Camera-White.svg</file>
+                <file alias="Setting-White">res/Images/Setting-White.svg</file>
+                <file alias="Setting-Green">res/Images/Setting-Green.svg</file>
+                <file alias="Start-White">res/Images/Start-White.svg</file>
+                <file alias="Start-Green">res/Images/Start-Green.svg</file>
+                <file alias="Charging-White">res/Images/Charging-White.svg</file>
+                <file alias="ocean">res/Images/ocean.png</file>
+                <file alias="headinglogo">res/Images/headinglogo.svg</file>
+
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>
 	<qresource prefix="/res/firmware">
