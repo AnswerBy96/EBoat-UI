@@ -34,18 +34,18 @@ CONFIG  += QGC_DISABLE_PX4_PLUGIN_FACTORY
 DEFINES += CUSTOMHEADER=\"\\\"CustomPlugin.h\\\"\"
 DEFINES += CUSTOMCLASS=CustomPlugin
 
-TARGET   = CustomQGroundControl
-DEFINES += QGC_APPLICATION_NAME='"\\\"AIRS E-BOAT\\\""'
+TARGET   = AIRS-EBoat
+DEFINES += QGC_APPLICATION_NAME='"\\\"AIRS-EBoat\\\""'
 
 DEFINES += QGC_ORG_NAME=\"\\\"eboat.org\\\"\"
 DEFINES += QGC_ORG_DOMAIN=\"\\\"org.eboat\\\"\"
 
-QGC_APP_NAME        = "AIRS E-BOAT"
-QGC_BINARY_NAME     = "AIRSEBOAT"
-QGC_ORG_NAME        = "EBOAT"
+QGC_APP_NAME        = "AIRS-EBoat"
+QGC_BINARY_NAME     = "AIRS-EBoat"
+QGC_ORG_NAME        = "eboat"
 QGC_ORG_DOMAIN      = "org.eboat"
-QGC_ANDROID_PACKAGE = "org.eboat.qgroundcontrol"
-QGC_APP_DESCRIPTION = "AIRS E-BOAT"
+QGC_ANDROID_PACKAGE = "org.eboat.qgc"
+QGC_APP_DESCRIPTION = "AIRS-EBoat"
 QGC_APP_COPYRIGHT   = "Copyright (C) 2020 QGroundControl Development Team. All rights reserved."
 
 # Our own, custom resources

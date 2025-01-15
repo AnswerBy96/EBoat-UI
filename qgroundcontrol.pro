@@ -60,11 +60,12 @@ WindowsBuild {
 # Branding
 #
 
-QGC_APP_NAME        = "AIRS-EBOAT"
+QGC_APP_NAME        = "AIRS-EBoat"
 QGC_ORG_NAME        = "eboat.org"
 QGC_ORG_DOMAIN      = "org.eboat"
 QGC_APP_DESCRIPTION = "Open source ground control app provided by QGroundControl dev team"
 QGC_APP_COPYRIGHT   = "Copyright (C) 2019 QGroundControl Development Team. All rights reserved."
+
 
 WindowsBuild {
     QGC_INSTALLER_SCRIPT        = "$$SOURCE_DIR\\deploy\\windows\\nullsoft_installer.nsi"
@@ -361,9 +362,9 @@ CustomBuild {
         RESOURCES += $$PWD/resources/InstrumentValueIcons/InstrumentValueIcons.qrc
     }
 } else {
-    DEFINES += QGC_APPLICATION_NAME=\"\\\"QGroundControl\\\"\"
-    DEFINES += QGC_ORG_NAME=\"\\\"QGroundControl.org\\\"\"
-    DEFINES += QGC_ORG_DOMAIN=\"\\\"org.qgroundcontrol\\\"\"
+    DEFINES += QGC_APPLICATION_NAME=\"\\\"AIRS-EBoat\\\"\"
+    DEFINES += QGC_ORG_NAME=\"\\\"eboat.org\\\"\"
+    DEFINES += QGC_ORG_DOMAIN=\"\\\"org.eboat\\\"\"
     RESOURCES += \
         $$PWD/qgroundcontrol.qrc \
         $$PWD/qgcresources.qrc \

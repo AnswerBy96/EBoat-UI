@@ -2,7 +2,8 @@ QT += androidextras
 
 include($$PWD/libs/qtandroidserialport/src/qtandroidserialport.pri)
 
-ANDROID_PACKAGE_SOURCE_DIR          = $$OUT_PWD/ANDROID_PACKAGE_SOURCE_DIR  # Tells Qt location of package files for build
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+#ANDROID_PACKAGE_SOURCE_DIR          = $$OUT_PWD/ANDROID_PACKAGE_SOURCE_DIR  # Tells Qt location of package files for build
 ANDROID_PACKAGE_QGC_SOURCE_DIR      = $$PWD/android                         # Original location of QGC package files
 ANDROID_PACKAGE_CUSTOM_SOURCE_DIR   = $$PWD/custom/android                  # Original location for custom build override package files
 
@@ -34,6 +35,9 @@ exists($$ANDROID_PACKAGE_CUSTOM_SOURCE_DIR) {
 
 android_source_dir_target.commands = $$android_source_dir_target.commands && \
         $$QMAKE_STREAM_EDITOR -i \"s/%%QGC_INSERT_PACKAGE_NAME%%/$$QGC_ANDROID_PACKAGE/\" $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml
+
+    message("ANDROID_PACKAGE_SOURCE_DIR : $$ANDROID_PACKAGE_SOURCE_DIR")
+    message("QGC_INSERT_PACKAGE_NAME : $$QGC_INSERT_PACKAGE_NAME")
 
 # Update manifest activity intent filter as needed
 

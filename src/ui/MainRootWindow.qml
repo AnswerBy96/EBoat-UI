@@ -263,10 +263,9 @@ ApplicationWindow {
 
     EBoatLeftPanel {
         id:         _leftPanel
-        width:      parent.width * (2/5)
+        width:      800
         height:     parent.height
-        x:          0
-        z:          2
+        z:          1
     }
 
     //-------------------------------------------------------------------------
