@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -182,6 +182,10 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _efiFactGroup                 (this)
     , _terrainFactGroup             (this)
     , _terrainProtocolHandler       (new TerrainProtocolHandler(this, &_terrainFactGroup, this))
+    , m_timestamp(0)
+    , m_gear(0)
+    , m_eboatSpeed(0.0f)
+    , m_eboatHeading(0.0f)
 {
     _linkManager = _toolbox->linkManager();
 
@@ -513,6 +517,20 @@ Vehicle::~Vehicle()
     _mav = nullptr;
 }
 
+void Vehicle::_handlePX4ToUIData(mavlink_message_t &message)
+{
+    mavlink_px4_to_ui_t msg;
+    mavlink_msg_px4_to_ui_decode(&message, &msg);
+    m_timestamp = msg.timestamp;
+    m_gear = msg.gear;
+    m_eboatSpeed = msg.eboat_speed;
+    m_eboatHeading = msg.eboat_heading;
+    emit timestampChanged();
+    emit gearChanged();
+    emit eboatSpeedChanged();
+    emit eboatHeadingChanged();
+}
+
 void Vehicle::prepareDelete()
 {
     if(_cameraManager) {
@@ -781,6 +799,9 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
                     QByteArray(reinterpret_cast<const char*>(ser.data), ser.count));
         }
     }
+        break;
+    case MAVLINK_MSG_ID_PX4_TO_UI:
+        _handlePX4ToUIData(message);
         break;
 #ifdef DAILY_BUILD // Disable use of development/WIP MAVLink messages for release builds
         case MAVLINK_MSG_ID_AVAILABLE_MODES_MONITOR:
@@ -4509,3 +4530,68 @@ void Vehicle::sendGripperAction(GRIPPER_OPTIONS gripperOption)
         break;
     }
 }
+
+quint64 Vehicle::timestamp() const
+{
+    return m_timestamp;
+}
+
+quint8 Vehicle::gear() const
+{
+    return m_gear;
+}
+
+float Vehicle::eboatSpeed() const
+{
+    return m_eboatSpeed;
+}
+
+float Vehicle::eboatHeading() const
+{
+    return m_eboatHeading;
+}
+
+void Vehicle::uiToPX4Ignition(int ignition)
+{
+    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
+    if (!sharedLink) {
+        qCDebug(VehicleLog)<< "senduiToPX4ModeThreadSafe: primary link gone!";
+        return;
+    }
+    mavlink_message_t msg;
+    mavlink_ui_to_px4_ignition_t sendMsg;
+    sendMsg.timestamp = static_cast<uint64_t>(m_timestamp);
+    sendMsg.control_start_stop = static_cast<uint8_t>(ignition);
+    for(int i = 0; i < 10; i++)
+    {
+        mavlink_msg_ui_to_px4_ignition_encode_chan(static_cast<uint8_t>(_mavlink->getSystemId()),
+                                                   static_cast<uint8_t>(_mavlink->getComponentId()),
+                                                   sharedLink->mavlinkChannel(),
+                                                   &msg,
+                                                   &sendMsg);
+        sendMessageOnLinkThreadSafe(sharedLink.get(), msg);
+    }
+}
+void Vehicle::uiToPX4Mode(int mode)
+{
+    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
+    if (!sharedLink) {
+        qCDebug(VehicleLog)<< "senduiToPX4ModeThreadSafe: primary link gone!";
+        return;
+    }
+    mavlink_message_t msg;
+    mavlink_ui_to_px4_mode_t sendMsg;
+    sendMsg.timestamp = static_cast<uint64_t>(m_timestamp);
+    sendMsg.mode = static_cast<uint8_t>(mode);
+    for(int i = 0; i < 10; i++)
+    {
+        mavlink_msg_ui_to_px4_mode_encode_chan(static_cast<uint8_t>(_mavlink->getSystemId()),
+                                               static_cast<uint8_t>(_mavlink->getComponentId()),
+                                               sharedLink->mavlinkChannel(),
+                                               &msg,
+                                               &sendMsg);
+        sendMessageOnLinkThreadSafe(sharedLink.get(), msg);
+    }
+
+}
+

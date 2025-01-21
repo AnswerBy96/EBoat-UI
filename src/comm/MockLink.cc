@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -659,6 +659,12 @@ void MockLink::_handleIncomingMavlinkMsg(const mavlink_message_t &msg)
     case MAVLINK_MSG_ID_PARAM_MAP_RC:
         _handleParamMapRC(msg);
         break;
+    // case MAVLINK_MSG_ID_UI_TO_PX4_MODE:
+    //     _handleuimode(msg);
+    //     break;
+    // case MAVLINK_MSG_ID_UI_TO_PX4_IGNITION:
+    //     _handleuiignition(msg);
+    //     break;
     default:
         break;
     }
@@ -851,6 +857,10 @@ void MockLink::_handleParamRequestList(const mavlink_message_t& msg)
     // Start the worker routine
     _currentParamRequestListComponentIndex = 0;
     _currentParamRequestListParamIndex = 0;
+
+    qDebug() << "message with param request list is received, and message id: " << msg.msgid
+             << " target system: " << request.target_system << "target_component: " << request.target_component;
+
 }
 
 /// Sends the next parameter to the vehicle
@@ -1797,3 +1807,21 @@ void MockLink::simulateConnectionRemoved(void)
     _commLost = true;
     _connectionRemoved();
 }
+
+// void MockLink::_handleuimode(const mavlink_message_t& msg)
+// {
+//     mavlink_ui_to_px4_mode_t ui_to_px4_mode;
+
+//     mavlink_msg_ui_to_px4_mode_decode(&msg,&ui_to_px4_mode);
+
+//     qDebug()<<"[MockLink] Recv From ui mode : "<<ui_to_px4_mode.mode;
+// }
+
+// void MockLink::_handleuiignition(const mavlink_message_t& msg)
+// {
+//     mavlink_ui_to_px4_ignition_t ui_to_px4_ignition;
+
+//     mavlink_msg_ui_to_px4_ignition_decode(&msg,&ui_to_px4_ignition);
+
+//     qDebug()<<"[MockLink] Recv From ui ignition : "<<ui_to_px4_ignition.control_start_stop;
+// }

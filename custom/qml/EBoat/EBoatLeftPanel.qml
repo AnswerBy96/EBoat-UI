@@ -34,6 +34,9 @@ Rectangle {
     property int anchorModeState: 0
     property int cruiseModeState: 0
 
+    property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
+    property int mode : 0
+
     function switchbtnclicked(){
         if(swictchBtnState == 0)
         {
@@ -42,6 +45,9 @@ Rectangle {
             boatbackgroundappear.running = true;
             swictchBtnState = 1;
             switchbtnimage.source = "/res/Start-Green"
+
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Ignition(swictchBtnState);
         }
         else
         {
@@ -50,6 +56,9 @@ Rectangle {
             boatbackgroundappear.running = false;
             swictchBtnState = 0;
             switchbtnimage.source = "/res/Start-White"
+
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Ignition(swictchBtnState);
         }
     }
 
@@ -59,6 +68,8 @@ Rectangle {
         {
             settingBtnState = 1;
             settingbtnimage.source = "/res/Setting-Green"
+
+            mainWindow.showToolSelectDialog();
         }
 
         else
@@ -104,12 +115,22 @@ Rectangle {
 
             modetext.text = "Auto Mode";
             modetext.opacity = 1;
+
+            mode = 1;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
+
+
         }
         else
         {
             automodeclickeffect.opacity = 0;
             autoModeState = 0;
             modetext.opacity = 0;
+
+            mode = 0;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
     }
 
@@ -133,12 +154,19 @@ Rectangle {
 
             modetext.text = "Manual Mode";
             modetext.opacity = 1;
+
+            mode = 2;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
         else
         {
             manualmodeclickeffect.opacity = 0;
             manualModeState = 0;
             modetext.opacity = 0;
+            mode = 0;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
     }
 
@@ -163,12 +191,19 @@ Rectangle {
 
             modetext.text = "Remote Mode";
             modetext.opacity = 1;
+
+            mode = 3;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
         else
         {
             remotemodeclickeffect.opacity = 0;
             remoteModeState = 0;
             modetext.opacity = 0;
+            mode = 0;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
     }
 
@@ -189,12 +224,20 @@ Rectangle {
 
             modetext.text = "Anchor Mode";
             modetext.opacity = 1;
+
+            mode = 4;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
         else
         {
             anchorsmodeclickeffect.opacity = 0;
             anchorModeState = 0;
             modetext.opacity = 0;
+
+            mode = 0;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
     }
 
@@ -215,12 +258,20 @@ Rectangle {
 
             modetext.text = "Cruise Mode";
             modetext.opacity = 1;
+
+            mode = 5;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
         else
         {
             cruisemodeclickeffect.opacity = 0;
             cruiseModeState = 0;
             modetext.opacity = 0;
+
+            mode = 0;
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4Mode(mode);
         }
     }
 

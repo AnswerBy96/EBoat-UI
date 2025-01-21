@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -343,6 +343,12 @@ public:
     Q_PROPERTY(quint64  vehicleUID                  READ vehicleUID                 NOTIFY vehicleUIDChanged)
     Q_PROPERTY(QString  vehicleUIDStr               READ vehicleUIDStr              NOTIFY vehicleUIDChanged)
 
+    /// This is to receive data from PX4 EBOAT
+    Q_PROPERTY(quint64 timestamp READ timestamp NOTIFY timestampChanged)
+    Q_PROPERTY(quint8 gear READ gear NOTIFY gearChanged)
+    Q_PROPERTY(float eboatSpeed READ eboatSpeed NOTIFY eboatSpeedChanged)
+    Q_PROPERTY(float eboatHeading READ eboatHeading NOTIFY eboatHeadingChanged)
+
     /// Resets link status counters
     Q_INVOKABLE void resetCounters  ();
 
@@ -460,6 +466,11 @@ public:
 
     /// Trigger camera using MAV_CMD_DO_DIGICAM_CONTROL command
     Q_INVOKABLE void triggerSimpleCamera(void);
+
+    /// Send Commands to boat PX4
+    Q_INVOKABLE void uiToPX4Ignition(int ignition);
+    Q_INVOKABLE void uiToPX4Mode(int mode);
+
 
 #if !defined(NO_ARDUPILOT_DIALECT)
     Q_INVOKABLE void flashBootloader();
@@ -916,6 +927,14 @@ public:
 
     HealthAndArmingCheckReport* healthAndArmingCheckReport() { return &_healthAndArmingCheckReport; }
 
+    quint64 timestamp() const;
+
+    quint8 gear() const;
+
+    float eboatSpeed() const;
+
+    float eboatHeading() const;
+
 public slots:
     void setVtolInFwdFlight                 (bool vtolInFwdFlight);
     void _offlineFirmwareTypeSettingChanged (QVariant varFirmwareType); // Should only be used by MissionControler to set firmware from Plan file
@@ -1028,6 +1047,14 @@ signals:
 
     void sensorsParametersResetAck      (bool success);
 
+    void timestampChanged();
+
+    void gearChanged();
+
+    void eboatSpeedChanged();
+
+    void eboatHeadingChanged();
+
 private slots:
     void _mavlinkMessageReceived            (LinkInterface* link, mavlink_message_t message);
     void _sendMessageMultipleNext           ();
@@ -1092,6 +1119,13 @@ private:
     void _handleObstacleDistance        (const mavlink_message_t& message);
     void _handleFenceStatus             (const mavlink_message_t& message);
     void _handleEvent(uint8_t comp_id, std::unique_ptr<events::parser::ParsedEvent> event);
+
+    ///This is for timestamp
+    QDateTime currentDateTime;
+    /// This function is to receive data from PX4 EBOAT
+    void _handlePX4ToUIData(mavlink_message_t &message);
+
+
     // ArduPilot dialect messages
 #if !defined(NO_ARDUPILOT_DIALECT)
     void _handleCameraFeedback          (const mavlink_message_t& message);
@@ -1506,6 +1540,12 @@ private:
     // We use this to limit above terrain altitude queries based on distance and altitude change
     QGeoCoordinate              _altitudeAboveTerrLastCoord;
     float                       _altitudeAboveTerrLastRelAlt = qQNaN();
+
+    //EBoat Data
+    quint64 m_timestamp;
+    quint8 m_gear;
+    float m_eboatSpeed;
+    float m_eboatHeading;
 };
 
 Q_DECLARE_METATYPE(Vehicle::MavCmdResultFailureCode_t)

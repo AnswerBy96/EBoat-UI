@@ -294,7 +294,7 @@ ApplicationWindow {
 
         QGCPopupDialog {
             id:         toolSelectDialog
-            title:      qsTr("Select Tool")
+            title:      qsTr("EBoat Tool")
             buttons:    StandardButton.Close
 
             property real _toolButtonHeight:    ScreenTools.defaultFontPixelHeight * 3
@@ -331,7 +331,7 @@ ApplicationWindow {
                         text:               qsTr("Analyze Tools")
                         imageResource:      "/qmlimages/Analyze.svg"
                         imageColor:         qgcPal.text
-                        visible:            QGroundControl.corePlugin.showAdvancedUI
+                        visible:            true
                         onClicked: {
                             if (!mainWindow.preventViewSwitch()) {
                                 toolSelectDialog.close()

@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -245,6 +245,9 @@ private:
     void _sendADSBVehicles              (void);
     void _moveADSBVehicle               (void);
     void _sendGeneralMetaData           (void);
+
+    // void _handleuimode(const mavlink_message_t& msg);
+    // void _handleuiignition(const mavlink_message_t& msg);
 
     static MockLink* _startMockLinkWorker(QString configName, MAV_AUTOPILOT firmwareType, MAV_TYPE vehicleType, bool sendStatusText, MockConfiguration::FailureMode_t failureMode);
     static MockLink* _startMockLink(MockConfiguration* mockConfig);
