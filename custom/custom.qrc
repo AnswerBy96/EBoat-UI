@@ -1,4 +1,4 @@
-<RCC>
+﻿<RCC>
     <qresource prefix="custom/img">
         <file alias="altitude.svg">res/Images/altitude.svg</file>
         <file alias="attitude_crosshair.svg">res/Images/attitude_crosshair.svg</file>
@@ -15,7 +15,7 @@
         <file alias="CustomAppIcon.png">res/Images/CustomAppIcon.png</file>
     </qresource>
     <qresource prefix="/qmlimages">
-	<file alias="PaperPlane.svg">res/Images/CustomVehicleIcon.svg</file>
+        <file alias="PaperPlane.svg">res/Images/PaperPlane.svg</file>
     </qresource>
     <qresource prefix="Custom/Widgets">
         <file alias="Custom/Widgets/CustomArtificialHorizon.qml">res/Custom/Widgets/CustomArtificialHorizon.qml</file>

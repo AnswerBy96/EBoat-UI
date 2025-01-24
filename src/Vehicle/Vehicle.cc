@@ -525,6 +525,7 @@ void Vehicle::_handlePX4ToUIData(mavlink_message_t &message)
     m_gear = msg.gear;
     m_eboatSpeed = msg.eboat_speed;
     m_eboatHeading = msg.eboat_heading;
+
     emit timestampChanged();
     emit gearChanged();
     emit eboatSpeedChanged();
@@ -686,7 +687,6 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     for (FactGroup* factGroup : factGroups()) {
         factGroup->handleMessage(this, message);
     }
-
     switch (message.msgid) {
     case MAVLINK_MSG_ID_HOME_POSITION:
         _handleHomePosition(message);

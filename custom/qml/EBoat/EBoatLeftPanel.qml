@@ -34,7 +34,10 @@ Rectangle {
     property int anchorModeState: 0
     property int cruiseModeState: 0
 
-    property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
+    readonly property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
+    property real eboat_heading: _activeVehicle? _activeVehicle.eboatHeading : 0
+    property real eboat_speed: _activeVehicle? _activeVehicle.eboatSpeed : 0
+    property int eboat_gear: _activeVehicle? _activeVehicle.gear : 0
     property int mode : 0
 
     function switchbtnclicked(){
@@ -48,6 +51,7 @@ Rectangle {
 
             if(_activeVehicle)
             _activeVehicle.uiToPX4Ignition(swictchBtnState);
+
         }
         else
         {
@@ -77,6 +81,12 @@ Rectangle {
             settingBtnState = 0;
             settingbtnimage.source = "/res/Setting-White"
         }
+    }
+
+    function settingbtnClose()
+    {
+        settingBtnState = 0;
+        settingbtnimage.source = "/res/Setting-White"
     }
 
     function camerabtnclicked()
@@ -117,6 +127,8 @@ Rectangle {
             modetext.opacity = 1;
 
             mode = 1;
+            mainWindow.showPlanView();
+
             if(_activeVehicle)
             _activeVehicle.uiToPX4Mode(mode);
 
@@ -129,6 +141,8 @@ Rectangle {
             modetext.opacity = 0;
 
             mode = 0;
+            mainWindow.showFlyView();
+
             if(_activeVehicle)
             _activeVehicle.uiToPX4Mode(mode);
         }
@@ -355,8 +369,8 @@ Rectangle {
 
     Rectangle {
         id: headingcircle
-        width: 120
-        height: 120
+        width: 130
+        height: 130
         color: "transparent"
         border.color: "#065cff"
         border.width: 5
@@ -378,7 +392,9 @@ Rectangle {
         font.bold: true
         font.pixelSize: 45
         color: "#ffffff"
-        text: qsTr("45°")
+        text: Math.floor(eboat_heading)
+        horizontalAlignment: Text.AlignHCenter // 水平居中
+        verticalAlignment: Text.AlignVCenter   // 垂直居中
     }
 
     Image {
@@ -386,8 +402,8 @@ Rectangle {
         anchors.horizontalCenter: headingcircle.horizontalCenter
         anchors.top: heading.bottom
         anchors.topMargin: -2
-        width: 35
-        height: 35
+        width: 40
+        height: 40
         source: "/res/headinglogo"
         fillMode: Image.PreserveAspectFit
     }
@@ -412,7 +428,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             color: "white"
-            text: qsTr("D")
+            text: eboat_gear == 0? "P" : eboat_gear == 1? "N" : eboat_gear == 2? "R" : eboat_gear == 3? "D" : "P"
         }
     }
 
@@ -420,7 +436,7 @@ Rectangle {
         id: mph
         visible: true
         color: "#ffffff"
-        text: "56"
+        text: Math.floor(eboat_speed)
         font.family: "Microsoft JhengHei UI"
         font.bold: true
         font.pointSize: 85

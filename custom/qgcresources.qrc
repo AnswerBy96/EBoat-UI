@@ -76,6 +76,11 @@
                 <file alias="Anchors-White">res/Images/Anchors-White.svg</file>
                 <file alias="Alarm-White">res/Images/Alarm-White.svg</file>
                 <file alias="Alarm-Red">res/Images/Alarm-Red.svg</file>
+                <file alias="yacht-black">res/Images/yacht-black.svg</file>
+                <file alias="Home-black">res/Images/Home-black.svg</file>
+                <file alias="Application">res/Images/Application.svg</file>
+                <file alias="Application-white">res/Images/Application-white.svg</file>
+                <file alias="yacht-white">res/Images/yacht-white.svg</file>
 
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>

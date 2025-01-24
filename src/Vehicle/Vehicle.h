@@ -1122,6 +1122,8 @@ private:
 
     ///This is for timestamp
     QDateTime currentDateTime;
+
+
     /// This function is to receive data from PX4 EBOAT
     void _handlePX4ToUIData(mavlink_message_t &message);
 

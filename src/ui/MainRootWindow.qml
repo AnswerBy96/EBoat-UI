@@ -150,7 +150,7 @@ ApplicationWindow {
     }
 
     function showTool(toolTitle, toolSource, toolIcon) {
-        toolDrawer.backIcon     = flightView.visible ? "/qmlimages/PaperPlane.svg" : "/qmlimages/Plan.svg"
+        toolDrawer.backIcon     = "/res/Home-black"
         toolDrawer.toolTitle    = toolTitle
         toolDrawer.toolSource   = toolSource
         toolDrawer.toolIcon     = toolIcon
@@ -162,11 +162,11 @@ ApplicationWindow {
     }
 
     function showSetupTool() {
-        showTool(qsTr("Vehicle Setup"), "SetupView.qml", "/qmlimages/Gears.svg")
+        showTool(qsTr("Vehicle Setup"), "SetupView.qml", "/res/yacht-black")
     }
 
     function showSettingsTool() {
-        showTool(qsTr("Application Settings"), "AppSettings.qml", "/res/QGCLogoWhite")
+        showTool(qsTr("Application Settings"), "AppSettings.qml", "/res/Application")
     }
 
     //-------------------------------------------------------------------------
@@ -266,6 +266,7 @@ ApplicationWindow {
         width:      800
         height:     parent.height
         z:          1
+
     }
 
     //-------------------------------------------------------------------------
@@ -285,7 +286,9 @@ ApplicationWindow {
 
     function showToolSelectDialog() {
         if (!mainWindow.preventViewSwitch()) {
-            toolSelectDialogComponent.createObject(mainWindow).open()
+            var toolSelectDialogInstance = toolSelectDialogComponent.createObject(mainWindow);
+            toolSelectDialogInstance.open();
+            toolSelectDialogInstance.rejected.connect(_leftPanel.settingbtnClose);
         }
     }
 
@@ -296,6 +299,7 @@ ApplicationWindow {
             id:         toolSelectDialog
             title:      qsTr("EBoat Tool")
             buttons:    StandardButton.Close
+
 
             property real _toolButtonHeight:    ScreenTools.defaultFontPixelHeight * 3
             property real _margins:             ScreenTools.defaultFontPixelWidth
@@ -315,7 +319,7 @@ ApplicationWindow {
                         Layout.fillWidth:   true
                         text:               qsTr("Vehicle Setup")
                         imageColor:         qgcPal.text
-                        imageResource:      "/qmlimages/Gears.svg"
+                        imageResource:      "/res/yacht-black"
                         onClicked: {
                             if (!mainWindow.preventViewSwitch()) {
                                 toolSelectDialog.close()
@@ -345,7 +349,7 @@ ApplicationWindow {
                         height:             toolSelectDialog._toolButtonHeight
                         Layout.fillWidth:   true
                         text:               qsTr("Application Settings")
-                        imageResource:      "/res/QGCLogoFull"
+                        imageResource:      "/res/Application-white"
                         imageColor:         "transparent"
                         visible:            !QGroundControl.corePlugin.options.combineSettingsAndSetup
                         onClicked: {
@@ -448,7 +452,10 @@ ApplicationWindow {
 
     PlanView {
         id:             planView
-        anchors.fill:   parent
+        anchors.left:   _leftPanel.right
+        anchors.right:  parent.right
+        anchors.top:    parent.top
+        anchors.bottom: parent.bottom
         visible:        false
     }
 
@@ -493,7 +500,7 @@ ApplicationWindow {
 
                 QGCLabel {
                     id:     backTextLabel
-                    text:   qsTr("Back")
+                    text:   qsTr("Home")
                 }
 
                 QGCLabel {
@@ -524,6 +531,7 @@ ApplicationWindow {
                 onClicked: {
                     toolDrawer.visible      = false
                     toolDrawer.toolSource   = ""
+                    _leftPanel.settingbtnClose();
                 }
             }
         }
