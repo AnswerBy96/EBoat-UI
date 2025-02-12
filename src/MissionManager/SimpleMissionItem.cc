@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -407,7 +407,7 @@ QString SimpleMissionItem::abbreviation() const
 
     switch(command()) {
     case MAV_CMD_NAV_TAKEOFF:
-        return tr("Takeoff");
+        return tr("Start");
     case MAV_CMD_NAV_LAND:
         return tr("Land");
     case MAV_CMD_NAV_VTOL_TAKEOFF:

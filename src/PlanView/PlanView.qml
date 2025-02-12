@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -451,7 +451,7 @@ Item {
                 }
 
                 Connections {
-                    target:                 _missionController
+                    target:      _missionController
                     function onSplitSegmentChanged()  { splitSegmentItem._updateSplitCoord() }
                 }
 
@@ -654,6 +654,58 @@ Item {
                         enabled:    _rallyPointController.supported
                     }
                 }
+                visible: false
+            }
+
+            Rectangle {
+                id: upload
+                width: 85
+                height: 85
+                anchors.horizontalCenter: rightControls.horizontalCenter
+                anchors.top: rightControls.bottom
+                anchors.topMargin: -20
+                color: "#363836"
+                radius: 20
+                border.color: "#363836"
+                border.width: 2
+
+                Image {
+                    width: 55
+                    height: 55
+                    source: "/res/upload"
+                    anchors.verticalCenterOffset: -12
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+
+                Text {
+                    text: "UpLoad"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.bottom
+                    anchors.topMargin: -25
+                    font.family: "Verdana"
+                    font.bold: true
+                    color: "white"
+                    font.pointSize: 7
+                }
+                MouseArea {
+                    id: uploadmouseArea
+                    anchors.fill: parent
+                    onEntered: {
+                        parent.scale = 0.9
+                    }
+                    onExited:{
+                        parent.scale = 1.0
+                    }
+                    onClicked: {
+                        if (QGroundControl.multiVehicleManager.activeVehicle) {
+                            _planMasterController.upload()
+                            mainWindow.showFlyView()
+                        }
+                    }
+
+                }
+                z:1
             }
             //-------------------------------------------------------
             // Mission Item Editor
@@ -662,7 +714,7 @@ Item {
                 anchors.left:           parent.left
                 anchors.right:          parent.right
                 anchors.top:            rightControls.bottom
-                anchors.topMargin:      ScreenTools.defaultFontPixelHeight * 0.25
+                anchors.topMargin:      70
                 anchors.bottom:         parent.bottom
                 anchors.bottomMargin:   ScreenTools.defaultFontPixelHeight * 0.25
                 visible:                _editingLayer == _layerMission && !planControlColapsed

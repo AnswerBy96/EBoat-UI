@@ -81,6 +81,8 @@
                 <file alias="Application">res/Images/Application.svg</file>
                 <file alias="Application-white">res/Images/Application-white.svg</file>
                 <file alias="yacht-white">res/Images/yacht-white.svg</file>
+                <file alias="upload">res/Images/upload.svg</file>
+                <file alias="status">res/Images/status.svg</file>
 
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>

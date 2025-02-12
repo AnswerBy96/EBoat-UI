@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -393,7 +393,7 @@ private:
     bool                        _isInsertTakeoffValid =         true;
     bool                        _isInsertLandValid =            false;
     bool                        _isROIActive =                  false;
-    bool                        _flyThroughCommandsAllowed =    false;
+    bool                        _flyThroughCommandsAllowed =    true;
     bool                        _isROIBeginCurrentItem =        false;
     double                      _minAMSLAltitude =              0;
     double                      _maxAMSLAltitude =              0;

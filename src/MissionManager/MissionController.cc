@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -2498,7 +2498,7 @@ void MissionController::setCurrentPlanViewSeqNum(int sequenceNumber, bool force)
                 // Land is only valid after the takeoff item.
                 _isInsertLandValid = false;
                 // Fly through commands are not allowed prior to the takeoff command
-                _flyThroughCommandsAllowed = false;
+                _flyThroughCommandsAllowed = true;
             }
         }
 
@@ -2514,13 +2514,13 @@ void MissionController::setCurrentPlanViewSeqNum(int sequenceNumber, bool force)
             _isInsertLandValid = false;
             if (sequenceNumber >= landSeqNum) {
                 // Can't have fly through commands after a land item
-                _flyThroughCommandsAllowed = false;
+                _flyThroughCommandsAllowed = true;
             }
         }
 
         // These are not valid when only takeoff is allowed
         _isInsertLandValid =            _isInsertLandValid && !_onlyInsertTakeoffValid;
-        _flyThroughCommandsAllowed =    _flyThroughCommandsAllowed && !_onlyInsertTakeoffValid;
+        // _flyThroughCommandsAllowed =    _flyThroughCommandsAllowed && !_onlyInsertTakeoffValid;
 
         emit currentPlanViewSeqNumChanged();
         emit currentPlanViewVIIndexChanged();

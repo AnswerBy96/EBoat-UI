@@ -6,6 +6,8 @@ import QGroundControl.Controllers 1.0
 import QGroundControl.ScreenTools 1.0
 import QGroundControl.Palette 1.0
 import QGroundControl.Controls 1.0
+import QGroundControl.MultiVehicleManager   1.0
+import QGroundControl.FactSystem            1.0
 import QtQuick.Extras 1.4
 
 
@@ -339,6 +341,148 @@ Rectangle {
         anchors.verticalCenter: batteryContainer.verticalCenter
     }
 
+    property var    _vehicleInAir:      _activeVehicle ? _activeVehicle.flying || _activeVehicle.landing : false
+    property bool   _vtolInFWDFlight:   _activeVehicle ? _activeVehicle.vtolInFwdFlight : false
+    property bool   _armed:             _activeVehicle ? _activeVehicle.armed : false
+    property real   _margins:           ScreenTools.defaultFontPixelWidth
+    property real   _spacing:           ScreenTools.defaultFontPixelWidth / 2
+    property bool   _healthAndArmingChecksSupported: _activeVehicle ? _activeVehicle.healthAndArmingCheckReport.supported : false
+
+    QGCPalette { id: qgcPal }
+
+    property color  _mainStatusBGColor: qgcPal.brandingPurple
+    property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
+
+    Image{
+        id: vehiclestatus
+        source: "/res/status"
+        anchors.right: statusrect.left
+        anchors.rightMargin: 2
+        anchors.top: statusrect.top
+        anchors.bottom: statusrect.bottom
+        fillMode: Image.PreserveAspectFit
+        scale: 0.8
+    }
+
+    property  string  statusrectDynamicColor1: "#c7c1c1"
+    property  string  statusrectDynamicColor2: "#000000"
+    Rectangle {
+        id: statusrect
+        width: 230
+        height: 40
+        radius: 30
+        border.color: "white"
+        border.width: 2
+        anchors.right: leftpanel.right
+        anchors.rightMargin: 5
+        anchors.top: leftpanel.top
+        anchors.topMargin: 70
+
+        gradient: Gradient {
+            GradientStop {
+                position: 0.0
+                color: statusrectDynamicColor1
+            }
+            GradientStop {
+                position: 1.0
+                color: statusrectDynamicColor2
+            }
+        }
+    }
+
+    Text {
+        id:             mainStatusLabel
+        font.italic: true
+        anchors.horizontalCenter: statusrect.horizontalCenter
+        anchors.bottom: statusrect.bottom
+        anchors.bottomMargin: 8
+        font.family: "Microsoft JhengHei UI"
+        font.bold: true
+        color:"white"
+        font.pixelSize: 20
+        text:           mainStatusText()
+        font.pointSize: _vehicleInAir ? ScreenTools.defaultFontPointSize : ScreenTools.largeFontPointSize
+
+        property string _commLostText:      qsTr("Communication Lost")
+        property string _readyToFlyText:    qsTr("Ready To Cruise")
+        property string _notReadyToFlyText: qsTr("Not Ready")
+        property string _disconnectedText:  qsTr("Disconnected")
+        property string _armedText:         qsTr("Armed")
+        property string _flyingText:        qsTr("Cruising")
+        property string _landingText:       qsTr("Landing")
+
+        function mainStatusText() {
+            var statusText
+            if (_activeVehicle)
+            {
+                if (_communicationLost) {
+                    statusrectDynamicColor1 = "#fdf60707";
+                    return mainStatusLabel._commLostText
+                }
+                if (_activeVehicle.armed) {
+                    statusrectDynamicColor1 = "#fd03fe0e"
+
+                    if (_healthAndArmingChecksSupported) {
+                        if (_activeVehicle.healthAndArmingCheckReport.canArm) {
+                            if (_activeVehicle.healthAndArmingCheckReport.hasWarningsOrErrors) {
+                                statusrectDynamicColor1 = "#fdf1f90c"
+                            }
+                        } else {
+                            statusrectDynamicColor1 = "#fdf60707";
+                        }
+                    }
+
+                    if (_activeVehicle.flying) {
+                        return mainStatusLabel._flyingText
+                    } else if (_activeVehicle.landing) {
+                        return mainStatusLabel._landingText
+                    } else {
+                        return mainStatusLabel._armedText
+                    }
+                } else {
+                    if (_healthAndArmingChecksSupported) {
+                        if (_activeVehicle.healthAndArmingCheckReport.canArm) {
+                            if (_activeVehicle.healthAndArmingCheckReport.hasWarningsOrErrors) {
+                                statusrectDynamicColor1 = "#fdf1f90c"
+                            } else {
+                                statusrectDynamicColor1 = "#fd03fe0e"
+                            }
+                            return mainStatusLabel._readyToFlyText
+                        } else {
+                            statusrectDynamicColor1 = "#fdf60707";
+                            return mainStatusLabel._notReadyToFlyText
+                        }
+                    } else if (_activeVehicle.readyToFlyAvailable) {
+                        if (_activeVehicle.readyToFly) {
+                            statusrectDynamicColor1 = "#fd03fe0e"
+                            return mainStatusLabel._readyToFlyText
+                        } else {
+                            statusrectDynamicColor1 = "#fdf1f90c"
+                            return mainStatusLabel._notReadyToFlyText
+                        }
+                    } else {
+                        // Best we can do is determine readiness based on AutoPilot component setup and health indicators from SYS_STATUS
+                        if (_activeVehicle.allSensorsHealthy && _activeVehicle.autopilot.setupComplete) {
+                            statusrectDynamicColor1 = "#fd03fe0e"
+                            return mainStatusLabel._readyToFlyText
+                        } else {
+                            statusrectDynamicColor1 = "#fdf1f90c"
+                            return mainStatusLabel._notReadyToFlyText
+                        }
+                    }
+                }
+            } else {
+                _mainStatusBGColor = qgcPal.brandingPurple
+                return mainStatusLabel._disconnectedText
+            }
+        }
+        QGCMouseArea {
+            anchors.fill: parent
+            enabled:    _activeVehicle
+            onClicked:  mainWindow.showIndicatorPopup(mainStatusLabel, sensorStatusInfoComponent)
+        }
+    }
+
     Image {
         id: yachtlogo
         source: "/res/yachtlogo"
@@ -392,7 +536,7 @@ Rectangle {
         font.bold: true
         font.pixelSize: 45
         color: "#ffffff"
-        text: Math.floor(eboat_heading)
+        text: Math.floor(eboat_heading)+ "°"
         horizontalAlignment: Text.AlignHCenter // 水平居中
         verticalAlignment: Text.AlignVCenter   // 垂直居中
     }
@@ -492,6 +636,7 @@ Rectangle {
             }
         }
     }
+
 
     Column {
         id: leftmodecol
