@@ -64,8 +64,8 @@ Item {
         var panelComponentWidth  = panelLoader.item.width
         var panelComponentHeight = panelLoader.item.height
 
-        dropDownItem.width  = panelComponentWidth  + (_dropMargin * 2) + _arrowPointWidth
-        dropDownItem.height = panelComponentHeight + (_dropMargin * 2)
+        dropDownItem.width  = panelComponentWidth  + (_dropMargin * 2) + _arrowPointWidth - 10
+        dropDownItem.height = panelComponentHeight + (_dropMargin * 2) - 10
 
         dropDownItem.x = _dropEdgeTopPoint.x + _dropMargin
         dropDownItem.y = _dropEdgeTopPoint.y -(dropDownItem.height / 2) + radius

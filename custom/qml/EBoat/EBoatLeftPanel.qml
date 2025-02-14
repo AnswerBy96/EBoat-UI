@@ -353,16 +353,16 @@ Rectangle {
     property color  _mainStatusBGColor: qgcPal.brandingPurple
     property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
 
-    Image{
-        id: vehiclestatus
-        source: "/res/status"
-        anchors.right: statusrect.left
-        anchors.rightMargin: 2
-        anchors.top: statusrect.top
-        anchors.bottom: statusrect.bottom
-        fillMode: Image.PreserveAspectFit
-        scale: 0.8
-    }
+    // Image{
+    //     id: vehiclestatus
+    //     source: "/res/status"
+    //     anchors.right: statusrect.left
+    //     anchors.rightMargin: 2
+    //     anchors.top: statusrect.top
+    //     anchors.bottom: statusrect.bottom
+    //     fillMode: Image.PreserveAspectFit
+    //     scale: 0.8
+    // }
 
     property  string  statusrectDynamicColor1: "#c7c1c1"
     property  string  statusrectDynamicColor2: "#000000"

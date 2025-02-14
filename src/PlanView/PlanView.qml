@@ -34,7 +34,7 @@ Item {
     readonly property real  _margin:                    ScreenTools.defaultFontPixelHeight * 0.5
     readonly property real  _toolsMargin:               ScreenTools.defaultFontPixelWidth * 0.75
     readonly property real  _radius:                    ScreenTools.defaultFontPixelWidth  * 0.5
-    readonly property real  _rightPanelWidth:           Math.min(parent.width / 3, ScreenTools.defaultFontPixelWidth * 30)
+    readonly property real  _rightPanelWidth:           Math.min(parent.width / 2, ScreenTools.defaultFontPixelWidth * 24)
     readonly property var   _defaultVehicleCoordinate:  QtPositioning.coordinate(37.803784, -122.462276)
     readonly property bool  _waypointsOnlyMode:         QGroundControl.corePlugin.options.missionWaypointsOnly
 
@@ -501,7 +501,7 @@ Item {
             anchors.top:        parent.top
             z:                  QGroundControl.zOrderWidgets
             maxHeight:          parent.height - toolStrip.y
-            title:              qsTr("Plan")
+            //title:              qsTr("Plan")
 
             readonly property int flyButtonIndex:       0
             readonly property int fileButtonIndex:      1
@@ -519,22 +519,22 @@ Item {
                 id: toolStripActionList
                 model: [
                     ToolStripAction {
-                        text:           qsTr("Fly")
-                        iconSource:     "/qmlimages/PaperPlane.svg"
+                        text:           qsTr("Cruise")
+                        iconSource:     "/res/boatview"
                         onTriggered:    mainWindow.showFlyView()
                     },
                     ToolStripAction {
-                        text:                   qsTr("File")
+                        text:                   qsTr("Plan")
                         enabled:                !_planMasterController.syncInProgress
                         visible:                true
                         showAlternateIcon:      _planMasterController.dirty
-                        iconSource:             "/qmlimages/MapSync.svg"
-                        alternateIconSource:    "/qmlimages/MapSyncChanged.svg"
+                        iconSource:             "/res/createplan"
+                        alternateIconSource:    "/res/createplan"
                         dropPanelComponent:     syncDropPanel
                     },
                     ToolStripAction {
-                        text:       qsTr("Takeoff")
-                        iconSource: "/res/takeoff.svg"
+                        text:       qsTr("Depart")
+                        iconSource: "/res/Depart"
                         enabled:    _missionController.isInsertTakeoffValid
                         visible:    toolStrip._isMissionLayer && !_planMasterController.controllerVehicle.rover
                         onTriggered: {
@@ -544,7 +544,8 @@ Item {
                     },
                     ToolStripAction {
                         id:                 addWaypointRallyPointAction
-                        text:               _editingLayer == _layerRallyPoints ? qsTr("Rally Point") : qsTr("Waypoint")
+                        //text:               _editingLayer == _layerRallyPoints ? qsTr("Rally Point") : qsTr("Waypoint")
+                        text:               qsTr("Point")
                         iconSource:         "/qmlimages/MapAddMission.svg"
                         enabled:            toolStrip._isRallyLayer ? true : _missionController.flyThroughCommandsAllowed
                         visible:            toolStrip._isRallyLayer || toolStrip._isMissionLayer
@@ -580,8 +581,9 @@ Item {
                         }
                     },
                     ToolStripAction {
-                        text:       _planMasterController.controllerVehicle.multiRotor ? qsTr("Return") : qsTr("Land")
-                        iconSource: "/res/rtl.svg"
+                        //text:       _planMasterController.controllerVehicle.multiRotor ? qsTr("Return") : qsTr("Land")
+                        text:       qsTr("Return")
+                        iconSource: "/res/return"
                         enabled:    _missionController.isInsertLandValid
                         visible:    toolStrip._isMissionLayer
                         onTriggered: {
@@ -659,34 +661,35 @@ Item {
 
             Rectangle {
                 id: upload
-                width: 85
-                height: 85
+                width: 240
+                height: 100
                 anchors.horizontalCenter: rightControls.horizontalCenter
                 anchors.top: rightControls.bottom
-                anchors.topMargin: -20
-                color: "#363836"
+                anchors.topMargin: -35
+                color: "#000000"
                 radius: 20
-                border.color: "#363836"
+                border.color: "#000000"
                 border.width: 2
 
                 Image {
-                    width: 55
-                    height: 55
-                    source: "/res/upload"
+                    width: 50
+                    height: 50
+                    source: "/res/mission"
                     anchors.verticalCenterOffset: -12
                     fillMode: Image.PreserveAspectFit
+                    scale: 1.2
                     anchors.centerIn: parent
                 }
 
                 Text {
-                    text: "UpLoad"
+                    text: "Mission Start"
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.bottom
-                    anchors.topMargin: -25
+                    anchors.topMargin: -32
                     font.family: "Verdana"
                     font.bold: true
                     color: "white"
-                    font.pointSize: 7
+                    font.pointSize: 11
                 }
                 MouseArea {
                     id: uploadmouseArea
@@ -804,8 +807,8 @@ Item {
             anchors.bottom:     parent.bottom
             height:             ScreenTools.defaultFontPixelHeight * 7
             missionController:  _missionController
-            visible:            _internalVisible && _editingLayer === _layerMission && QGroundControl.corePlugin.options.showMissionStatus
-
+            //visible:            _internalVisible && _editingLayer === _layerMission && QGroundControl.corePlugin.options.showMissionStatus
+            visible:false
             onSetCurrentSeqNum: _missionController.setCurrentPlanViewSeqNum(seqNum, true)
 
             property bool _internalVisible: _planViewSettings.showMissionItemStatus.rawValue

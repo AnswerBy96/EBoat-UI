@@ -156,6 +156,7 @@ Rectangle {
                             Layout.alignment:   Qt.AlignBaseline
                             text:               qsTr("Altitude")
                             font.pointSize:     ScreenTools.smallFontPointSize
+                            visible:    false
                         }
                         QGCLabel {
                             id:                 altModeLabel
@@ -176,6 +177,7 @@ Rectangle {
                     id:                 altField
                     Layout.fillWidth:   true
                     fact:               missionItem.altitude
+                    visible: false
                 }
 
                 QGCLabel {
@@ -240,7 +242,7 @@ Rectangle {
 
                 QGCCheckBox {
                     id:         flightSpeedCheckbox
-                    text:       qsTr("Flight Speed")
+                    text:       qsTr("Cruising Speed")
                     checked:    missionItem.speedSection.specifyFlightSpeed
                     onClicked:  missionItem.speedSection.specifyFlightSpeed = checked
                     visible:    missionItem.speedSection.available

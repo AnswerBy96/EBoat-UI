@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -18,7 +18,7 @@ import QGroundControl.Controls      1.0
 Rectangle {
     id:         _root
     color:      qgcPal.toolbarBackground
-    width:      _idealWidth < repeater.contentWidth ? repeater.contentWidth : _idealWidth
+    width:      _idealWidth < repeater.contentWidth ? repeater.contentWidth + 5 : _idealWidth + 5
     height:     Math.min(maxHeight, toolStripColumn.height + (flickable.anchors.margins * 2))
     radius:     ScreenTools.defaultFontPixelWidth / 2
 
@@ -74,7 +74,6 @@ Rectangle {
 
             Repeater {
                 id: repeater
-
                 ToolStripHoverButton {
                     id:                 buttonTemplate
                     anchors.left:       toolStripColumn.left

@@ -83,6 +83,11 @@
                 <file alias="yacht-white">res/Images/yacht-white.svg</file>
                 <file alias="upload">res/Images/upload.svg</file>
                 <file alias="status">res/Images/status.svg</file>
+                <file alias="boatview">res/Images/boatview.svg</file>
+                <file alias="return">res/Images/return.svg</file>
+                <file alias="Depart">res/Images/Depart.svg</file>
+                <file alias="createplan">res/Images/createplan.svg</file>
+                <file alias="mission">res/Images/mission.svg</file>
 
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>

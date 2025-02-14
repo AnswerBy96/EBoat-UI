@@ -280,6 +280,7 @@ Rectangle {
         anchors.top:        topRowLayout.bottom
         source:             missionItem.editorQml
         visible:            _currentItem
+        //visible: false
 
         property var    masterController:   _masterController
         property real   availableWidth:     _root.width - (anchors.margins * 2) ///< How wide the editor should be

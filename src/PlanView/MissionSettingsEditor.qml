@@ -67,6 +67,7 @@ Rectangle {
         QGCLabel {
             text:           qsTr("All Altitudes")
             font.pointSize: ScreenTools.smallFontPointSize
+            visible: false
         }
         MouseArea {
             Layout.preferredWidth:  childrenRect.width
@@ -84,8 +85,8 @@ Rectangle {
 
             RowLayout {
                 spacing: ScreenTools.defaultFontPixelWidth
-                enabled: _noMissionItemsAdded
-
+                enabled: _noMissionItemsAdded   
+                visible: false
                 QGCLabel {
                     id:     altModeLabel
                     text:   QGroundControl.altitudeModeShortDescription(_missionController.globalAltitudeMode)
@@ -102,10 +103,12 @@ Rectangle {
         QGCLabel {
             text:           qsTr("Initial Waypoint Alt")
             font.pointSize: ScreenTools.smallFontPointSize
+            visible: false
         }
         FactTextField {
             fact:               QGroundControl.settingsManager.appSettings.defaultMissionItemAltitude
             Layout.fillWidth:   true
+            visible: false
         }
 
         GridLayout {
@@ -116,7 +119,7 @@ Rectangle {
 
             QGCCheckBox {
                 id:         flightSpeedCheckBox
-                text:       qsTr("Flight speed")
+                text:       qsTr("Cruising Speed")
                 visible:    _showFlightSpeed
                 checked:    missionItem.speedSection.specifyFlightSpeed
                 onClicked:   missionItem.speedSection.specifyFlightSpeed = checked
@@ -155,7 +158,8 @@ Rectangle {
                 anchors.left:   parent.left
                 anchors.right:  parent.right
                 text:           qsTr("Vehicle Info")
-                visible:        !_waypointsOnlyMode
+                //visible:        !_waypointsOnlyMode
+                visible: false
                 checked:        false
             }
 
@@ -165,8 +169,8 @@ Rectangle {
                 columnSpacing:  ScreenTools.defaultFontPixelWidth
                 rowSpacing:     columnSpacing
                 columns:        2
-                visible:        vehicleInfoSectionHeader.visible && vehicleInfoSectionHeader.checked
-
+                //visible:        vehicleInfoSectionHeader.visible && vehicleInfoSectionHeader.checked
+                visible: false
                 QGCLabel {
                     text:               _firmwareLabel
                     Layout.fillWidth:   true
@@ -237,7 +241,8 @@ Rectangle {
                 anchors.left:   parent.left
                 anchors.right:  parent.right
                 text:           qsTr("Launch Position")
-                visible:        !_vehicleHasHomePosition
+                //visible:        !_vehicleHasHomePosition
+                visible:        false
                 checked:        false
             }
 
@@ -245,8 +250,8 @@ Rectangle {
                 anchors.left:   parent.left
                 anchors.right:  parent.right
                 spacing:        _margin
-                visible:        plannedHomePositionSection.checked && !_vehicleHasHomePosition
-
+                //visible:        plannedHomePositionSection.checked && !_vehicleHasHomePosition
+                visible:        false
                 GridLayout {
                     anchors.left:   parent.left
                     anchors.right:  parent.right
