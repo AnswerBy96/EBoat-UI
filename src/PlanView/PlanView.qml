@@ -677,7 +677,7 @@ Item {
                     source: "/res/mission"
                     anchors.verticalCenterOffset: -12
                     fillMode: Image.PreserveAspectFit
-                    scale: 1.2
+                    scale: 1.0
                     anchors.centerIn: parent
                 }
 

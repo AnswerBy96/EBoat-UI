@@ -88,6 +88,8 @@
                 <file alias="Depart">res/Images/Depart.svg</file>
                 <file alias="createplan">res/Images/createplan.svg</file>
                 <file alias="mission">res/Images/mission.svg</file>
+                <file alias="planview-White">res/Images/planview-White.svg</file>
+                <file alias="planview-Green">res/Images/planview-Green.svg</file>
 
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>

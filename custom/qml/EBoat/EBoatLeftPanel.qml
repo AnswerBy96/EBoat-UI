@@ -28,6 +28,7 @@ Rectangle {
     property int settingBtnState: 0
     property int cameraBtnState: 0
     property int alarmBtnState: 0
+    property int planviewBtnState: 0
 
 
     property int autoModeState:   0
@@ -63,6 +64,27 @@ Rectangle {
             swictchBtnState = 0;
             switchbtnimage.source = "/res/Start-White"
 
+
+            manualmodeclickeffect.opacity = 0;
+            manualModeState = 0;
+
+            remotemodeclickeffect.opacity = 0;
+            remoteModeState = 0;
+
+            anchorsmodeclickeffect.opacity = 0;
+            anchorModeState = 0;
+
+            cruisemodeclickeffect.opacity = 0;
+            cruiseModeState = 0;
+
+            automodeclickeffect.opacity = 0;
+            autoModeState = 0;
+
+
+            modetext.opacity = 0;
+
+
+
             if(_activeVehicle)
             _activeVehicle.uiToPX4Ignition(swictchBtnState);
         }
@@ -91,6 +113,21 @@ Rectangle {
         settingbtnimage.source = "/res/Setting-White"
     }
 
+    function planviewbtnclicked()
+    {
+        if(planviewBtnState == 0)
+        {
+            planviewBtnState = 1;
+            mainWindow.showPlanView();
+
+        }
+
+        else
+        {
+            mainWindow.showFlyView();
+        }
+    }
+
     function camerabtnclicked()
     {
         if(cameraBtnState == 0)
@@ -107,7 +144,7 @@ Rectangle {
     }
 
     function automodeclicked(){
-        if(autoModeState == 0)
+        if(autoModeState == 0 && swictchBtnState == 1)
         {
             manualmodeclickeffect.opacity = 0;
             manualModeState = 0;
@@ -129,6 +166,7 @@ Rectangle {
             modetext.opacity = 1;
 
             mode = 1;
+            planviewBtnState = 1;
             mainWindow.showPlanView();
 
             if(_activeVehicle)
@@ -143,6 +181,7 @@ Rectangle {
             modetext.opacity = 0;
 
             mode = 0;
+            planviewBtnState = 0;
             mainWindow.showFlyView();
 
             if(_activeVehicle)
@@ -151,7 +190,7 @@ Rectangle {
     }
 
     function manualmodeclicked(){
-        if(manualModeState == 0)
+        if(manualModeState == 0 && swictchBtnState == 1)
         {
             automodeclickeffect.opacity = 0;
             autoModeState = 0;
@@ -187,7 +226,7 @@ Rectangle {
     }
 
     function remotemodeclicked(){
-        if(remoteModeState == 0)
+        if(remoteModeState == 0 && swictchBtnState == 1)
         {
             automodeclickeffect.opacity = 0;
             autoModeState = 0;
@@ -224,7 +263,7 @@ Rectangle {
     }
 
     function anchorsmodeclicked(){
-        if(anchorModeState == 0)
+        if(anchorModeState == 0 && swictchBtnState == 1)
         {
             automodeclickeffect.opacity = 0;
             autoModeState = 0;
@@ -258,7 +297,7 @@ Rectangle {
     }
 
     function cruisemodeclicked(){
-        if(cruiseModeState == 0)
+        if(cruiseModeState == 0 && swictchBtnState == 1)
         {
             cruisemodeclickeffect.opacity = 0;
             cruiseModeState = 0;
@@ -291,29 +330,42 @@ Rectangle {
         }
     }
 
-    property int batteryLevel: 70
+    property int batteryLevel: 50
 
     Rectangle {
         id: batteryContainer
-        width: 128
-        height: 18
-        border.color: "black"
+        width: 155
+        height: 25
+        border.color: "white"
         border.width: 2
-        radius: 20
+        radius: 8
         anchors.right: leftpanel.right
-        anchors.rightMargin: 50
+        anchors.rightMargin: 15
         anchors.top: leftpanel.top
-        anchors.topMargin: 30
+        anchors.topMargin: 18
+
+        // 电池正极凸起（右侧小方块）
+        Rectangle {
+            width: 6
+            height: 12
+            radius: 8
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.right
+                leftMargin: -2
+            }
+        }
 
         // 电池内部填充区域
         Rectangle {
             id: batteryLevelDisplay
             width: batteryContainer.width * batteryLevel / 100
-            height: batteryContainer.height * 0.75
-            radius: 20
+            height: batteryContainer.height * 0.95
+            radius: 6
             // 低于20%时显示红色#33de33 f50e42
             color: batteryLevel > 20 ? "#33de33" : "#f50e42"
             anchors.left: parent.left
+            anchors.leftMargin: 1
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -323,23 +375,25 @@ Rectangle {
             font.family: "Microsoft JhengHei UI"
             font.bold: true
             anchors.right: parent.left
-            anchors.rightMargin: 15
+            anchors.rightMargin: 13
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 25
             color: "white"
+            style: Text.Outline
+            styleColor: "#40000000" // 半透明黑色描边
             text: "50%"
         }
     }
 
-    Image {
-        id: charginglogo
-        source: "/res/Charging-White"
-        fillMode: Image.PreserveAspectFit
-        scale: 0.2
-        anchors.left: leftpanel.right
-        anchors.leftMargin: -125
-        anchors.verticalCenter: batteryContainer.verticalCenter
-    }
+    // Image {
+    //     id: charginglogo
+    //     source: "/res/Charging-White"
+    //     fillMode: Image.PreserveAspectFit
+    //     scale: 0.2
+    //     anchors.left: leftpanel.right
+    //     anchors.leftMargin: -125
+    //     anchors.verticalCenter: batteryContainer.verticalCenter
+    // }
 
     property var    _vehicleInAir:      _activeVehicle ? _activeVehicle.flying || _activeVehicle.landing : false
     property bool   _vtolInFWDFlight:   _activeVehicle ? _activeVehicle.vtolInFwdFlight : false
@@ -522,30 +576,40 @@ Rectangle {
         anchors.horizontalCenter: leftpanel.horizontalCenter
         anchors.horizontalCenterOffset: -225
         anchors.bottom: seperator.top
-        anchors.bottomMargin: 50
+        anchors.bottomMargin: 30
     }
 
     Text {
         id: heading
-        width: 60
-        height: 60
         anchors.horizontalCenter: headingcircle.horizontalCenter
         anchors.top: headingcircle.top
-        anchors.topMargin: 18
+        anchors.topMargin: 20
         font.family: "Microsoft JhengHei UI"
         font.bold: true
-        font.pixelSize: 45
+        font.pixelSize: 40
         color: "#ffffff"
-        text: Math.floor(eboat_heading)+ "°"
+        text: Math.floor(eboat_heading)
         horizontalAlignment: Text.AlignHCenter // 水平居中
         verticalAlignment: Text.AlignVCenter   // 垂直居中
+    }
+
+    Text{
+        id:headinglabel
+        anchors.top:    heading.top
+        anchors.left:   heading.right
+        anchors.leftMargin: -1
+        font.family: "Microsoft JhengHei UI"
+        font.bold: true
+        font.pixelSize: 30
+        color: "#ffffff"
+        text:"°"
     }
 
     Image {
         id: headinglogo
         anchors.horizontalCenter: headingcircle.horizontalCenter
         anchors.top: heading.bottom
-        anchors.topMargin: -2
+        anchors.topMargin: 1
         width: 40
         height: 40
         source: "/res/headinglogo"
@@ -554,21 +618,21 @@ Rectangle {
 
     Rectangle {
         id: gearrect
-        width: 65
-        height: 65
+        width: 70
+        height: 70
         color: "transparent"
         radius: 15
         border.color: "#827c7c"
         border.width: 4
         anchors.horizontalCenter: leftpanel.horizontalCenter
-        anchors.bottom: seperator.top
-        anchors.bottomMargin: 220
+        anchors.top: leftpanel.top;
+        anchors.topMargin: 15
 
         Text {
             id: geartext
             font.family: "Microsoft JhengHei UI"
             font.bold: true
-            font.pixelSize: 33
+            font.pixelSize: 37
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             color: "white"
@@ -648,8 +712,8 @@ Rectangle {
         z: 3
         Rectangle {
             id: automode
-            width: 105
-            height: 105
+            width: 125
+            height: 125
             opacity: 1
             color: "#363836"
             radius: 20
@@ -657,8 +721,8 @@ Rectangle {
             border.width: 2
 
             Image {
-                width: 65
-                height: 65
+                width: 75
+                height: 75
                 source: "/res/Auto-White"
                 anchors.verticalCenterOffset: -17
                 fillMode: Image.PreserveAspectFit
@@ -673,7 +737,7 @@ Rectangle {
                 font.family: "Verdana"
                 font.bold: true
                 color: "white"
-                font.pointSize: 7
+                font.pointSize: 9
             }
 
             Rectangle {
@@ -698,16 +762,16 @@ Rectangle {
 
         Rectangle {
             id: manualmode
-            width: 105
-            height: 105
+            width: 125
+            height: 125
             color: "#363836"
             radius: 20
             border.color: "#363836"
             border.width: 2
 
             Image {
-                width: 65
-                height: 65
+                width: 75
+                height: 75
                 source: "/res/Manual-White"
                 anchors.verticalCenterOffset: -12
                 fillMode: Image.PreserveAspectFit
@@ -722,7 +786,7 @@ Rectangle {
                 font.family: "Verdana"
                 font.bold: true
                 color: "white"
-                font.pointSize: 7
+                font.pointSize: 9
             }
 
             Rectangle {
@@ -747,16 +811,16 @@ Rectangle {
 
         Rectangle {
             id: remotemode
-            width: 105
-            height: 105
+            width: 125
+            height: 125
             color: "#363836"
             radius: 20
             border.color: "#363836"
             border.width: 2
 
             Image {
-                width: 65
-                height: 65
+                width: 75
+                height: 75
                 source: "/res/Remote-White"
                 anchors.verticalCenterOffset: -12
                 fillMode: Image.PreserveAspectFit
@@ -771,7 +835,7 @@ Rectangle {
                 font.family: "Verdana"
                 font.bold: true
                 color: "white"
-                font.pointSize: 7
+                font.pointSize: 9
             }
 
             Rectangle {
@@ -805,8 +869,8 @@ Rectangle {
         z: 3
         Rectangle {
             id: anchorsmode
-            width: 105
-            height: 105
+            width: 125
+            height: 125
             opacity: 1
             color: "#363836"
             radius: 20
@@ -814,8 +878,8 @@ Rectangle {
             border.width: 2
 
             Image {
-                width: 65
-                height: 65
+                width: 75
+                height: 75
                 source: "/res/Anchors-White"
                 anchors.verticalCenterOffset: -17
                 fillMode: Image.PreserveAspectFit
@@ -830,7 +894,7 @@ Rectangle {
                 font.family: "Verdana"
                 font.bold: true
                 color: "white"
-                font.pointSize: 7
+                font.pointSize: 9
             }
 
             Rectangle {
@@ -855,16 +919,16 @@ Rectangle {
 
         Rectangle {
             id: cruisemode
-            width: 105
-            height: 105
+            width: 125
+            height: 125
             color: "#363836"
             radius: 20
             border.color: "#363836"
             border.width: 2
 
             Image {
-                width: 65
-                height: 65
+                width: 75
+                height: 75
                 source: "/res/Cruise-White"
                 anchors.verticalCenterOffset: -12
                 fillMode: Image.PreserveAspectFit
@@ -879,7 +943,7 @@ Rectangle {
                 font.family: "Verdana"
                 font.bold: true
                 color: "white"
-                font.pointSize: 7
+                font.pointSize: 9
             }
 
             Rectangle {
@@ -913,8 +977,8 @@ Rectangle {
 
         Button {
             id: settingbtn
-            width: 50
-            height: 50
+            width: 60
+            height: 60
             background: Image {
                 id: settingbtnimage
                 source: "/res/Setting-White"
@@ -926,9 +990,23 @@ Rectangle {
         }
 
         Button {
+            id: planviewbtn
+            width: 60
+            height: 60
+            background: Image {
+                id: planviewbtnimage
+                source: planviewBtnState == 1?"/res/planview-Green" : "/res/planview-White"
+                fillMode: Image.PreserveAspectFit // 保持图片比例
+            }
+            onClicked:{
+                planviewbtnclicked();
+            }
+        }
+
+        Button {
             id: switchbtn
-            width: 50
-            height: 50
+            width: 60
+            height: 60
             background: Image {
                 id: switchbtnimage
                 source: "/res/Start-White"
@@ -941,8 +1019,8 @@ Rectangle {
 
         Button {
             id: camerabtn
-            width: 50
-            height: 50
+            width: 60
+            height: 60
             background: Image {
                 id: camerabtnimage
                 source: "/res/Camera-White"
@@ -955,8 +1033,8 @@ Rectangle {
 
         Button {
             id: alarmbtn
-            width: 50
-            height: 50
+            width: 60
+            height: 60
             background: Image {
                 id: alarmbtnimage
                 source: "/res/Alarm-White"

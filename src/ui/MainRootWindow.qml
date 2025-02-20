@@ -142,6 +142,8 @@ ApplicationWindow {
         }
         viewSwitch(toolbar.flyViewToolbar)
         flightView.visible = true
+        _leftPanel.planviewBtnState = 0;
+        console.log("planviewBtnState : ",_leftPanel.planviewBtnState);
     }
 
     function showPlanView() {
