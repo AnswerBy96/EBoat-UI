@@ -470,6 +470,7 @@ public:
     /// Send Commands to boat PX4
     Q_INVOKABLE void uiToPX4Ignition(int ignition);
     Q_INVOKABLE void uiToPX4Mode(int mode);
+    Q_INVOKABLE void uiToPX4CruiseParam(float target_speed , float target_heading);
 
 
 #if !defined(NO_ARDUPILOT_DIALECT)

@@ -37,6 +37,9 @@ Rectangle {
     property int anchorModeState: 0
     property int cruiseModeState: 0
 
+    property real targetSpeed: 0
+    property real targetHeading: 0
+
     readonly property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
     property real eboat_heading: _activeVehicle? _activeVehicle.eboatHeading : 0
     property real eboat_speed: _activeVehicle? _activeVehicle.eboatSpeed : 0
@@ -79,6 +82,9 @@ Rectangle {
 
             automodeclickeffect.opacity = 0;
             autoModeState = 0;
+
+            targetHeadingGroup.visible = false;
+            targetSpeedGroup.visible = false;
 
 
             modetext.opacity = 0;
@@ -158,6 +164,9 @@ Rectangle {
             cruisemodeclickeffect.opacity = 0;
             cruiseModeState = 0;
 
+            targetHeadingGroup.visible = false;
+            targetSpeedGroup.visible = false;
+
             automodeclickeffect.opacity = 0.8;
             autoModeState = 1;
 
@@ -204,6 +213,9 @@ Rectangle {
             cruisemodeclickeffect.opacity = 0;
             cruiseModeState = 0;
 
+            targetHeadingGroup.visible = false;
+            targetSpeedGroup.visible = false;
+
             manualmodeclickeffect.opacity = 0.8;
             manualModeState = 1;
 
@@ -241,6 +253,9 @@ Rectangle {
             cruisemodeclickeffect.opacity = 0;
             cruiseModeState = 0;
 
+            targetHeadingGroup.visible = false;
+            targetSpeedGroup.visible = false;
+
             remotemodeclickeffect.opacity = 0.8;
             remoteModeState = 1;
 
@@ -274,6 +289,13 @@ Rectangle {
             cruisemodeclickeffect.opacity = 0;
             cruiseModeState = 0;
 
+
+            remotemodeclickeffect.opacity = 0;
+            remoteModeState = 0;
+
+            targetHeadingGroup.visible = false;
+            targetSpeedGroup.visible = false;
+
             anchorsmodeclickeffect.opacity = 0.8;
             anchorModeState = 1;
 
@@ -299,14 +321,18 @@ Rectangle {
     function cruisemodeclicked(){
         if(cruiseModeState == 0 && swictchBtnState == 1)
         {
-            cruisemodeclickeffect.opacity = 0;
-            cruiseModeState = 0;
+            automodeclickeffect.opacity = 0;
+            autoModeState = 0;
 
-           cruisemodeclickeffect.opacity = 0;
-            cruiseModeState = 0;
+            manualmodeclickeffect.opacity = 0;
+            manualModeState = 0;
 
             anchorsmodeclickeffect.opacity = 0;
             anchorModeState = 0;
+
+
+            remotemodeclickeffect.opacity = 0;
+            remoteModeState = 0;
 
             cruisemodeclickeffect.opacity = 0.8;
             cruiseModeState = 1;
@@ -314,9 +340,18 @@ Rectangle {
             modetext.text = "Cruise Mode";
             modetext.opacity = 1;
 
+            targetHeadingGroup.visible = true;
+            targetSpeedGroup.visible = true;
+            targetSpeed = eboat_speed;
+            targetHeading = eboat_heading;
+
+
             mode = 5;
             if(_activeVehicle)
             _activeVehicle.uiToPX4Mode(mode);
+
+            if(_activeVehicle)
+            _activeVehicle.uiToPX4CruiseParam(targetSpeed,targetHeading);
         }
         else
         {
@@ -324,10 +359,51 @@ Rectangle {
             cruiseModeState = 0;
             modetext.opacity = 0;
 
+            targetHeadingGroup.visible = false;
+            targetSpeedGroup.visible = false;
+
             mode = 0;
             if(_activeVehicle)
             _activeVehicle.uiToPX4Mode(mode);
         }
+    }
+
+    function targetspeedupclicked()
+    {
+        let newSpeed = targetSpeed + 0.1;
+        targetSpeed = Math.min(newSpeed, 30);// 上限30m/s
+
+        if(_activeVehicle)
+        _activeVehicle.uiToPX4CruiseParam(targetSpeed,targetHeading);
+    }
+
+    function targetspeeddownclicked()
+    {
+        let newSpeed = targetSpeed - 0.1;
+        targetSpeed = Math.max(newSpeed, 0);   // 下限0m/s
+
+        if(_activeVehicle)
+        _activeVehicle.uiToPX4CruiseParam(targetSpeed,targetHeading);
+    }
+
+    function targetheadingupclicked()
+    {
+        let newHeading = targetHeading + 1;
+        if(newHeading > 360) newHeading = 360; // 上限360度
+        targetHeading = newHeading;
+
+        if(_activeVehicle)
+        _activeVehicle.uiToPX4CruiseParam(targetSpeed,targetHeading);
+    }
+
+    function targetheadingdownclicked()
+    {
+        let newHeading = targetHeading - 1;
+        if(newHeading < 0) newHeading = 0;    // 下限0度
+        targetHeading = newHeading;
+
+        if(_activeVehicle)
+        _activeVehicle.uiToPX4CruiseParam(targetSpeed,targetHeading);
     }
 
     property int batteryLevel: 50
@@ -644,7 +720,7 @@ Rectangle {
         id: mph
         visible: true
         color: "#ffffff"
-        text: Math.floor(eboat_speed)
+        text: eboat_speed % 1 == 0?eboat_speed.toFixed(0) : eboat_speed.toFixed(1)
         font.family: "Microsoft JhengHei UI"
         font.bold: true
         font.pointSize: 85
@@ -701,13 +777,186 @@ Rectangle {
         }
     }
 
+    Item {
+        id: targetHeadingGroup
+        anchors.top: seperator.bottom
+        anchors.topMargin: -45
+        anchors.right: leftpanel.right
+        anchors.rightMargin: -50
+        width: 460
+        visible: false
+
+        Image {
+            id: targetheadingdown
+            anchors.right: parent.right
+            anchors.rightMargin: 280
+            anchors.top: parent.top
+            source: "/res/Down-White"
+            scale: 0.2
+            z: 0
+
+            MouseArea{
+                id:targetheadingdownmousearea
+                anchors.fill: parent
+                onClicked: targetheadingdownclicked()
+            }
+        }
+
+        Text {
+            id: targetheadingtext
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: 0
+            anchors.top: parent.top
+            anchors.topMargin: 55
+            text: "Target Heading"
+            font {
+                family: "Verdana"
+                bold: true
+                pointSize: 11
+            }
+            color: "#07edf3"
+        }
+
+        Text {
+            id: targetheading
+            anchors.horizontalCenter: targetheadingtext.horizontalCenter
+            anchors.horizontalCenterOffset: 0
+            anchors.top: targetheadingtext.bottom
+            anchors.topMargin: 0
+            text: targetHeading.toFixed(0)
+            font {
+                family: "Microsoft JhengHei UI"
+                bold: true
+                pointSize: 40
+            }
+            color: "#07edf3"
+        }
+
+        Text {
+            id: targetheadingunit
+            anchors.left: targetheading.right
+            anchors.leftMargin: 5
+            anchors.top: targetheading.top
+            anchors.topMargin: 10
+            text: "°"
+            font {
+                family: "Verdana"
+                bold: true
+                pointSize: 10
+            }
+            color: "#07edf3"
+        }
+
+        Image {
+            id: targetheadingup
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            source: "/res/Up-White"
+            scale: 0.2
+            z: 0
+
+            MouseArea{
+                id:targetheadingupmousearea
+                anchors.fill: parent
+                onClicked: targetheadingupclicked()
+            }
+        }
+    }
+
+    Item {
+        id: targetSpeedGroup
+        anchors.top: seperator.bottom
+        anchors.topMargin: -45
+        anchors.left: leftpanel.left
+        anchors.leftMargin: -50
+        width: 460
+        visible: false
+
+        Image {
+            id: targetspeeddown
+            anchors.left: parent.left
+            anchors.top: parent.top
+            source: "/res/Down-White"
+            scale: 0.2
+            z: 0
+            MouseArea{
+                id:targetspeeddownmousearea
+                anchors.fill: parent
+                onClicked:targetspeeddownclicked()
+            }
+        }
+
+        Text {
+            id: targetspeedtext
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: 0
+            anchors.top: parent.top
+            anchors.topMargin: 55
+            text: "Target Speed"
+            font {
+                family: "Verdana"
+                bold: true
+                pointSize: 11
+            }
+            color: "#07edf3"
+        }
+
+        Text {
+            id: targetspeed
+            anchors.horizontalCenter: targetspeedtext.horizontalCenter
+            anchors.horizontalCenterOffset: 0
+            anchors.top: targetspeedtext.bottom
+            anchors.topMargin: 0
+            text: targetSpeed.toFixed(1)
+            font {
+                family: "Microsoft JhengHei UI"
+                bold: true
+                pointSize: 40
+            }
+            color: "#07edf3"
+        }
+
+        Text {
+            id: targetspeedunit
+            anchors.left: targetspeed.right
+            anchors.leftMargin: 10
+            anchors.bottom: targetspeed.bottom
+            anchors.bottomMargin: 15
+            text: "MPH"
+            font {
+                family: "Verdana"
+                bold: true
+                pointSize: 8
+            }
+            color: "#07edf3"
+        }
+
+        Image {
+            id: targetspeedup
+            anchors.left: parent.left
+            anchors.leftMargin: 280
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            source: "/res/Up-White"
+            scale: 0.2
+            z: 0
+
+            MouseArea{
+                id:targetspeedupmousearea
+                anchors.fill: parent
+                onClicked: targetspeedupclicked()
+            }
+        }
+    }
+
 
     Column {
         id: leftmodecol
         anchors.left: leftpanel.left
         anchors.leftMargin: 40
         anchors.top: seperator.bottom
-        anchors.topMargin: 150
+        anchors.topMargin: 200
         spacing: 60 // 子元素间的间距
         z: 3
         Rectangle {
@@ -864,7 +1113,7 @@ Rectangle {
         anchors.right: leftpanel.right
         anchors.rightMargin: 40
         anchors.top: seperator.bottom
-        anchors.topMargin: 250
+        anchors.topMargin: 300
         spacing: 60 // 子元素间的间距
         z: 3
         Rectangle {
@@ -1050,7 +1299,7 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 0
         anchors.rightMargin: 0
-        anchors.topMargin: 200
+        anchors.topMargin: 250
         visible:true
         scale: 1.2
         z:3
@@ -1061,7 +1310,7 @@ Rectangle {
         id: boatbackground
         anchors.centerIn: leftpanel
         source: "/res/ocean"
-        anchors.verticalCenterOffset: 100
+        anchors.verticalCenterOffset: 150
         anchors.horizontalCenterOffset: -10
         fillMode: Image.PreserveAspectCrop
         opacity: 0
