@@ -471,6 +471,7 @@ public:
     Q_INVOKABLE void uiToPX4Ignition(int ignition);
     Q_INVOKABLE void uiToPX4Mode(int mode);
     Q_INVOKABLE void uiToPX4CruiseParam(float target_speed , float target_heading);
+    Q_INVOKABLE void uiToPX4MissionState(int mission_state);
 
 
 #if !defined(NO_ARDUPILOT_DIALECT)

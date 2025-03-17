@@ -59,12 +59,22 @@ Item {
     readonly property int       _layerRallyPoints:          3
     readonly property string    _armedVehicleUploadPrompt:  qsTr("Vehicle is currently armed. Do you want to upload the mission to the vehicle?")
 
+    readonly property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
+
     function mapCenter() {
         var coordinate = editorMap.center
         coordinate.latitude  = coordinate.latitude.toFixed(_decimalPlaces)
         coordinate.longitude = coordinate.longitude.toFixed(_decimalPlaces)
         coordinate.altitude  = coordinate.altitude.toFixed(_decimalPlaces)
         return coordinate
+    }
+
+    function missionstart()
+    {
+        if (_activeVehicle) {
+            _planMasterController.upload()
+            mainWindow.showFlyView()
+        }
     }
 
     property bool _firstMissionLoadComplete:    false
@@ -536,7 +546,8 @@ Item {
                         text:       qsTr("Depart")
                         iconSource: "/res/Depart"
                         enabled:    _missionController.isInsertTakeoffValid
-                        visible:    toolStrip._isMissionLayer && !_planMasterController.controllerVehicle.rover
+                        //visible:    toolStrip._isMissionLayer && !_planMasterController.controllerVehicle.rover
+                        visible: false
                         onTriggered: {
                             toolStrip.allAddClickBoolsOff()
                             insertTakeItemAfterCurrent()
@@ -555,7 +566,8 @@ Item {
                         text:               _missionController.isROIActive ? qsTr("Cancel ROI") : qsTr("ROI")
                         iconSource:         "/qmlimages/MapAddMission.svg"
                         enabled:            !_missionController.onlyInsertTakeoffValid
-                        visible:            toolStrip._isMissionLayer && _planMasterController.controllerVehicle.roiModeSupported
+                        //visible:            toolStrip._isMissionLayer && _planMasterController.controllerVehicle.roiModeSupported
+                        visible: false
                         checkable:          !_missionController.isROIActive
                         onCheckedChanged:   _addROIOnClick = checked
                         onTriggered: {
@@ -571,7 +583,8 @@ Item {
                         text:               _singleComplexItem ? _missionController.complexMissionItemNames[0] : qsTr("Pattern")
                         iconSource:         "/qmlimages/MapDrawShape.svg"
                         enabled:            _missionController.flyThroughCommandsAllowed
-                        visible:            toolStrip._isMissionLayer
+                        //visible:            toolStrip._isMissionLayer
+                        visible:               false
                         dropPanelComponent: _singleComplexItem ? undefined : patternDropPanel
                         onTriggered: {
                             toolStrip.allAddClickBoolsOff()
@@ -585,7 +598,8 @@ Item {
                         text:       qsTr("Return")
                         iconSource: "/res/return"
                         enabled:    _missionController.isInsertLandValid
-                        visible:    toolStrip._isMissionLayer
+                        //visible:    toolStrip._isMissionLayer
+                        visible  : false
                         onTriggered: {
                             toolStrip.allAddClickBoolsOff()
                             insertLandItemAfterCurrent()
@@ -660,21 +674,21 @@ Item {
             }
 
             Rectangle {
-                id: upload
-                width: 240
+                id: missionstart
+                width: 200
                 height: 100
                 anchors.horizontalCenter: rightControls.horizontalCenter
                 anchors.top: rightControls.bottom
                 anchors.topMargin: -35
-                color: "#000000"
+                color: "#363836"
                 radius: 20
-                border.color: "#000000"
+                border.color: "#363836"
                 border.width: 2
 
                 Image {
-                    width: 50
-                    height: 50
-                    source: "/res/mission"
+                    width: 65
+                    height: 65
+                    source: "/res/mission-start"
                     anchors.verticalCenterOffset: -12
                     fillMode: Image.PreserveAspectFit
                     scale: 1.0
@@ -692,7 +706,7 @@ Item {
                     font.pointSize: 11
                 }
                 MouseArea {
-                    id: uploadmouseArea
+                    id: missionstartmouseArea
                     anchors.fill: parent
                     onEntered: {
                         parent.scale = 0.9
@@ -706,10 +720,11 @@ Item {
                             mainWindow.showFlyView()
                         }
                     }
-
                 }
                 z:1
             }
+
+
             //-------------------------------------------------------
             // Mission Item Editor
             Item {

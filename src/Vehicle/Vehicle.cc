@@ -4617,3 +4617,25 @@ void Vehicle::uiToPX4CruiseParam(float target_speed , float target_heading)
     }
 }
 
+void Vehicle::uiToPX4MissionState(int mission_state)
+{
+    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
+    if (!sharedLink) {
+        qCDebug(VehicleLog)<< "senduiToPX4CruiseParamThreadSafe: primary link gone!";
+        return;
+    }
+    mavlink_message_t msg;
+    mavlink_ui_to_px4_missionstate_t sendMsg;
+    sendMsg.timestamp = static_cast<uint64_t>(m_timestamp);
+    sendMsg.mission_state = static_cast<uint8_t>(mission_state);
+    for(int i = 0; i < 10; i++)
+    {
+        mavlink_msg_ui_to_px4_missionstate_encode_chan(static_cast<uint8_t>(_mavlink->getSystemId()),
+                                                      static_cast<uint8_t>(_mavlink->getComponentId()),
+                                                      sharedLink->mavlinkChannel(),
+                                                      &msg,
+                                                      &sendMsg);
+        sendMessageOnLinkThreadSafe(sharedLink.get(), msg);
+    }
+}
+

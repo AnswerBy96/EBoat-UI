@@ -92,6 +92,9 @@
                 <file alias="planview-Green">res/Images/planview-Green.svg</file>
                 <file alias="Down-White">res/Images/Down-White.svg</file>
                 <file alias="Up-White">res/Images/Up-White.svg</file>
+                <file alias="mission-pause">res/Images/mission-pause.svg</file>
+                <file alias="mission-resume">res/Images/mission-resume.svg</file>
+                <file alias="mission-start">res/Images/mission-start.svg</file>
 
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>

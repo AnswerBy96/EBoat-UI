@@ -443,6 +443,32 @@ ApplicationWindow {
         }
     }
 
+    property int mission_state: -1 //(0: Pause, 1: Resume)
+    readonly property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
+
+    function misssionpause()
+    {
+        if(mission_state == 0)
+        {
+            return;
+        }
+
+        mission_state = 0;
+        if(_activeVehicle)
+        _activeVehicle.uiToPX4MissionState(mission_state);
+    }
+
+    function missionresume()
+    {
+        if(mission_state === 1)
+        {
+            return;
+        }
+
+        mission_state = 1;
+        if(_activeVehicle)
+        _activeVehicle.uiToPX4MissionState(mission_state);
+    }
 
     FlyView {
         id:             flightView
@@ -450,6 +476,101 @@ ApplicationWindow {
         anchors.right:  parent.right
         anchors.top:    parent.top
         anchors.bottom: parent.bottom
+
+        Row {
+            id: missioncontrol
+            anchors.top: parent.top
+            anchors.topMargin: 35
+            anchors.right: parent.right
+            anchors.rightMargin: 30
+            spacing: 40 // 子元素间的间距
+            visible:_leftPanel.autoModeState == 0 ? false : true
+            z: 3
+
+            Rectangle {
+                id: missionresumerect
+                width: 135
+                height: 100
+                color: "#363836"
+                radius: 20
+                border.color: "#363836"
+                border.width: 2
+
+                Image {
+                    width: 60
+                    height: 60
+                    source: "/res/mission-resume"
+                    anchors.verticalCenterOffset: -8
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+
+                Text {
+                    text: "Mission Resume"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.bottom
+                    anchors.topMargin: -25
+                    font.family: "Verdana"
+                    font.bold: true
+                    color: "white"
+                    font.pointSize: 8
+                }
+
+                MouseArea {
+                    id: missionresumemouseArea
+                    anchors.fill: parent
+                    onEntered: {
+                        parent.scale = 0.9
+                    }
+                    onExited:{
+                        parent.scale = 1.0
+                    }
+                    onClicked:missionresume();
+                }
+            }
+
+            Rectangle {
+                id: missionpauserect
+                width: 135
+                height: 100
+                color: "#363836"
+                radius: 20
+                border.color: "#363836"
+                border.width: 2
+
+                Image {
+                    width: 60
+                    height: 60
+                    source: "/res/mission-pause"
+                    anchors.verticalCenterOffset: -8
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+
+                Text {
+                    text: "Mission Pause"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.bottom
+                    anchors.topMargin: -25
+                    font.family: "Verdana"
+                    font.bold: true
+                    color: "white"
+                    font.pointSize: 8
+                }
+
+                MouseArea {
+                    id: missionpausemouseArea
+                    anchors.fill: parent
+                    onEntered: {
+                        parent.scale = 0.9
+                    }
+                    onExited:{
+                        parent.scale = 1.0
+                    }
+                    onClicked: misssionpause();
+                }
+            }
+        }
     }
 
     PlanView {
