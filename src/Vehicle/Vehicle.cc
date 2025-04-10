@@ -532,6 +532,17 @@ void Vehicle::_handlePX4ToUIData(mavlink_message_t &message)
     emit eboatHeadingChanged();
 }
 
+void Vehicle::_handleEboatBatteryInfo(mavlink_message_t &message)
+{
+    mavlink_battery_sensor_info_t msg;
+    mavlink_msg_battery_sensor_info_decode(&message, &msg);
+    m_timestamp = msg.timestamp;
+    m_eboatBatterySoc = msg.string_soc;
+
+    emit timestampChanged();
+    emit eboatBatterySocChanged();
+}
+
 void Vehicle::prepareDelete()
 {
     if(_cameraManager) {
@@ -799,9 +810,12 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
                     QByteArray(reinterpret_cast<const char*>(ser.data), ser.count));
         }
     }
-        break;
+    break;
     case MAVLINK_MSG_ID_PX4_TO_UI:
         _handlePX4ToUIData(message);
+        break;
+    case MAVLINK_MSG_ID_BATTERY_SENSOR_INFO:
+        _handleEboatBatteryInfo(message);
         break;
 #ifdef DAILY_BUILD // Disable use of development/WIP MAVLink messages for release builds
         case MAVLINK_MSG_ID_AVAILABLE_MODES_MONITOR:
@@ -4549,6 +4563,11 @@ float Vehicle::eboatSpeed() const
 float Vehicle::eboatHeading() const
 {
     return m_eboatHeading;
+}
+
+float Vehicle::eboatBatterySoc() const
+{
+    return m_eboatBatterySoc;
 }
 
 void Vehicle::uiToPX4Ignition(int ignition)

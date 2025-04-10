@@ -348,6 +348,7 @@ public:
     Q_PROPERTY(quint8 gear READ gear NOTIFY gearChanged)
     Q_PROPERTY(float eboatSpeed READ eboatSpeed NOTIFY eboatSpeedChanged)
     Q_PROPERTY(float eboatHeading READ eboatHeading NOTIFY eboatHeadingChanged)
+    Q_PROPERTY(float eboatBatterySoc READ eboatBatterySoc NOTIFY eboatBatterySocChanged)
 
     /// Resets link status counters
     Q_INVOKABLE void resetCounters  ();
@@ -937,6 +938,8 @@ public:
 
     float eboatHeading() const;
 
+    float eboatBatterySoc() const;
+
 public slots:
     void setVtolInFwdFlight                 (bool vtolInFwdFlight);
     void _offlineFirmwareTypeSettingChanged (QVariant varFirmwareType); // Should only be used by MissionControler to set firmware from Plan file
@@ -1057,6 +1060,8 @@ signals:
 
     void eboatHeadingChanged();
 
+    void eboatBatterySocChanged();
+
 private slots:
     void _mavlinkMessageReceived            (LinkInterface* link, mavlink_message_t message);
     void _sendMessageMultipleNext           ();
@@ -1128,6 +1133,7 @@ private:
 
     /// This function is to receive data from PX4 EBOAT
     void _handlePX4ToUIData(mavlink_message_t &message);
+    void _handleEboatBatteryInfo(mavlink_message_t &message);
 
 
     // ArduPilot dialect messages
@@ -1550,6 +1556,7 @@ private:
     quint8 m_gear;
     float m_eboatSpeed;
     float m_eboatHeading;
+    float m_eboatBatterySoc;
 };
 
 Q_DECLARE_METATYPE(Vehicle::MavCmdResultFailureCode_t)

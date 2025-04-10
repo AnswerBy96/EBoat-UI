@@ -340,7 +340,10 @@ void MAVLinkProtocol::receiveBytes(LinkInterface* link, QByteArray b)
                 mavlink_msg_high_latency2_decode(&_message, &highLatency2);
                 emit vehicleHeartbeatInfo(link, _message.sysid, _message.compid, highLatency2.autopilot, highLatency2.type);
             }
-
+            if(_message.msgid == MAVLINK_MSG_ID_BATTERY_SENSOR_INFO)
+            {
+                qDebug() << "Recv BMS";
+            }
 #if 0
             // Given the current state of SiK Radio firmwares there is no way to make the code below work.
             // The ArduPilot implementation of SiK Radio firmware always sends MAVLINK_MSG_ID_RADIO_STATUS as a mavlink 1

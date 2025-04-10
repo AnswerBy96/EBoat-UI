@@ -44,6 +44,7 @@ Rectangle {
     property real eboat_heading: _activeVehicle? _activeVehicle.eboatHeading : 0
     property real eboat_speed: _activeVehicle? _activeVehicle.eboatSpeed : 0
     property int eboat_gear: _activeVehicle? _activeVehicle.gear : 0
+    property int eboat_batterysoc: _activeVehicle? _activeVehicle.eboatBatterySoc : 0
     property int mode : 0
 
     function switchbtnclicked(){
@@ -406,7 +407,7 @@ Rectangle {
         _activeVehicle.uiToPX4CruiseParam(targetSpeed,targetHeading);
     }
 
-    property int batteryLevel: 50
+    //property int batteryLevel: 50
 
     Rectangle {
         id: batteryContainer
@@ -435,11 +436,11 @@ Rectangle {
         // 电池内部填充区域
         Rectangle {
             id: batteryLevelDisplay
-            width: batteryContainer.width * batteryLevel / 100
+            width: batteryContainer.width * eboat_batterysoc / 100
             height: batteryContainer.height * 0.95
             radius: 6
             // 低于20%时显示红色#33de33 f50e42
-            color: batteryLevel > 20 ? "#33de33" : "#f50e42"
+            color: eboat_batterysoc > 20 ? "#33de33" : "#f50e42"
             anchors.left: parent.left
             anchors.leftMargin: 1
             anchors.verticalCenter: parent.verticalCenter
@@ -457,7 +458,7 @@ Rectangle {
             color: "white"
             style: Text.Outline
             styleColor: "#40000000" // 半透明黑色描边
-            text: "50%"
+            text: Math.floor(eboat_batterysoc) + "%"
         }
     }
 
