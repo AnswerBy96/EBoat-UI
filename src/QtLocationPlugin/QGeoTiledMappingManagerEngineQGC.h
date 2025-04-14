@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2013 Aaron McCarthy <mccarthy.aaron@gmail.com>
 ** Contact: http://www.qt-project.org/legal
@@ -48,7 +48,7 @@
 #define QGEOTILEDMAPPINGMANAGERENGINEQGC_H
 
 #include <QtLocation/QGeoServiceProvider>
-#include <QtLocation/private/qgeotiledmap_p.h>
+// #include <QtLocation/private/qgeotiledmap_p.h>
 #include <QtLocation/private/qgeotiledmappingmanagerengine_p.h>
 
 class QGeoTiledMapQGC : public QGeoTiledMap
