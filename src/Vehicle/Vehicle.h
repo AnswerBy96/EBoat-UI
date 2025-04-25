@@ -1551,7 +1551,7 @@ private:
     QGeoCoordinate              _altitudeAboveTerrLastCoord;
     float                       _altitudeAboveTerrLastRelAlt = qQNaN();
 
-    //EBoat Data
+    // Data
     quint64 m_timestamp;
     quint8 m_gear;
     float m_eboatSpeed;

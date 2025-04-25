@@ -46,6 +46,8 @@ Rectangle {
     property int eboat_gear: _activeVehicle? _activeVehicle.gear : 0
     property int eboat_batterysoc: _activeVehicle? _activeVehicle.eboatBatterySoc : 0
     property int mode : 0
+    property var    _videoSettings:             QGroundControl.settingsManager.videoSettings
+    property string videosettingsource:         _videoSettings.videoSource.rawValue
 
     function switchbtnclicked(){
         if(swictchBtnState == 0)
@@ -141,12 +143,14 @@ Rectangle {
         {
             cameraBtnState = 1;
             camerabtnimage.source = "/res/Camera-Green"
+            _videoSettings.videoSource.rawValue = "RTSP Video Stream"
         }
 
         else
         {
             cameraBtnState = 0;
             camerabtnimage.source = "/res/Camera-White"
+            _videoSettings.videoSource.rawValue = "Video Stream Disabled"
         }
     }
 
@@ -721,7 +725,7 @@ Rectangle {
         id: mph
         visible: true
         color: "#ffffff"
-        text: eboat_speed % 1 == 0?eboat_speed.toFixed(0) : eboat_speed.toFixed(1)
+        text: Math.abs(eboat_speed) % 1 == 0?Math.abs(eboat_speed).toFixed(0) : Math.abs(eboat_speed).toFixed(1)
         font.family: "Microsoft JhengHei UI"
         font.bold: true
         font.pointSize: 85
@@ -748,7 +752,7 @@ Rectangle {
         height: 2.5
         width: parent.width * 0.95
         anchors.top: leftpanel.top
-        anchors.topMargin: leftpanel.height / 4
+        anchors.topMargin: 280
         anchors.horizontalCenter: leftpanel.horizontalCenter
         border.width: 1
         border.color: "black"

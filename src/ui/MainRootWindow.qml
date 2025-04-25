@@ -143,7 +143,6 @@ ApplicationWindow {
         viewSwitch(toolbar.flyViewToolbar)
         flightView.visible = true
         _leftPanel.planviewBtnState = 0;
-        console.log("planviewBtnState : ",_leftPanel.planviewBtnState);
     }
 
     function showPlanView() {
@@ -268,6 +267,10 @@ ApplicationWindow {
         width:      800
         height:     parent.height
         z:          1
+
+        Component.onCompleted: {
+            _videoSettings.videoSource.rawValue = "Video Stream Disabled";
+        }
 
     }
 

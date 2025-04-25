@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -17,7 +17,6 @@ import QGroundControl.ScreenTools   1.0
 Item {
     id:         _root
     visible:    QGroundControl.videoManager.hasVideo
-
     property Item pipState: videoPipState
     QGCPipState {
         id:         videoPipState
@@ -55,6 +54,7 @@ Item {
         anchors.fill:   parent
         useSmallFont:   _root.pipState.state !== _root.pipState.fullState
         visible:        QGroundControl.videoManager.isGStreamer
+        //visible:false
     }
     //-- UVC Video (USB Camera or Video Device)
     Loader {

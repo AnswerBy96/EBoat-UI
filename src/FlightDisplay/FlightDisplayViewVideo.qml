@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -41,7 +41,7 @@ Item {
         Image {
             id:             noVideo
             anchors.fill:   parent
-            source:         "/res/NoVideoBackground.jpg"
+            source:         "/res/NoVideoBackground"
             fillMode:       Image.PreserveAspectCrop
             visible:        !(QGroundControl.videoManager.decoding)
 

@@ -95,6 +95,7 @@
                 <file alias="mission-pause">res/Images/mission-pause.svg</file>
                 <file alias="mission-resume">res/Images/mission-resume.svg</file>
                 <file alias="mission-start">res/Images/mission-start.svg</file>
+                <file alias="NoVideoBackground">res/Images/NoVideoBackground.png</file>
 
 		<file>../resources/icons/qgroundcontrol.ico</file>
 	</qresource>
