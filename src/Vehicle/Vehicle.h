@@ -1553,10 +1553,10 @@ private:
 
     // Data
     quint64 m_timestamp;
-    quint8 m_gear;
-    float m_eboatSpeed;
-    float m_eboatHeading;
-    float m_eboatBatterySoc;
+    quint8 m_gear = 0;
+    float m_eboatSpeed = 0;
+    float m_eboatHeading = 0;
+    float m_eboatBatterySoc = 0;
 };
 
 Q_DECLARE_METATYPE(Vehicle::MavCmdResultFailureCode_t)

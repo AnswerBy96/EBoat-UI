@@ -40,17 +40,19 @@ Rectangle {
     property real targetSpeed: 0
     property real targetHeading: 0
 
-    readonly property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
+    property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
     property real eboat_heading: _activeVehicle? _activeVehicle.eboatHeading : 0
     property real eboat_speed: _activeVehicle? _activeVehicle.eboatSpeed : 0
     property int eboat_gear: _activeVehicle? _activeVehicle.gear : 0
-    property int eboat_batterysoc: _activeVehicle? _activeVehicle.eboatBatterySoc : 0
+    property real eboat_batterysoc: _activeVehicle? _activeVehicle.eboatBatterySoc : 0
     property int mode : 0
     property var    _videoSettings:             QGroundControl.settingsManager.videoSettings
     property string videosettingsource:         _videoSettings.videoSource.rawValue
+    property bool _initialDownloadComplete: _activeVehicle ? _activeVehicle.initialConnectComplete : true
+
 
     function switchbtnclicked(){
-        if(swictchBtnState == 0)
+        if(swictchBtnState == 0 && _initialDownloadComplete == true)
         {
             _model3D.boatAnimation(swictchBtnState);
             boatbackgrounddisappear.running = false;
@@ -62,7 +64,7 @@ Rectangle {
             _activeVehicle.uiToPX4Ignition(swictchBtnState);
 
         }
-        else
+        else if(swictchBtnState == 1)
         {
             _model3D.boatAnimation(swictchBtnState);
             boatbackgrounddisappear.running = true;
@@ -124,7 +126,7 @@ Rectangle {
 
     function planviewbtnclicked()
     {
-        if(planviewBtnState == 0)
+        if(planviewBtnState == 0 && swictchBtnState == 1)
         {
             planviewBtnState = 1;
             mainWindow.showPlanView();
@@ -139,7 +141,7 @@ Rectangle {
 
     function camerabtnclicked()
     {
-        if(cameraBtnState == 0)
+        if(cameraBtnState == 0 && swictchBtnState == 1)
         {
             cameraBtnState = 1;
             camerabtnimage.source = "/res/Camera-Green"
@@ -152,6 +154,10 @@ Rectangle {
             camerabtnimage.source = "/res/Camera-White"
             _videoSettings.videoSource.rawValue = "Video Stream Disabled"
         }
+    }
+
+    function alarmbtnclicked()
+    {
     }
 
     function automodeclicked(){
@@ -440,7 +446,7 @@ Rectangle {
         // 电池内部填充区域
         Rectangle {
             id: batteryLevelDisplay
-            width: batteryContainer.width * eboat_batterysoc / 100
+            width: batteryContainer.width * eboat_batterysoc / 100 > 100 ? 100 : batteryContainer.width * eboat_batterysoc / 100
             height: batteryContainer.height * 0.95
             radius: 6
             // 低于20%时显示红色#33de33 f50e42
@@ -545,7 +551,6 @@ Rectangle {
         property string _armedText:         qsTr("Armed")
         property string _flyingText:        qsTr("Cruising")
         property string _landingText:       qsTr("Landing")
-
         function mainStatusText() {
             var statusText
             if (_activeVehicle)
@@ -556,7 +561,6 @@ Rectangle {
                 }
                 if (_activeVehicle.armed) {
                     statusrectDynamicColor1 = "#fd03fe0e"
-
                     if (_healthAndArmingChecksSupported) {
                         if (_activeVehicle.healthAndArmingCheckReport.canArm) {
                             if (_activeVehicle.healthAndArmingCheckReport.hasWarningsOrErrors) {
@@ -574,9 +578,11 @@ Rectangle {
                     } else {
                         return mainStatusLabel._armedText
                     }
-                } else {
+                }
+                else {
                     if (_healthAndArmingChecksSupported) {
-                        if (_activeVehicle.healthAndArmingCheckReport.canArm) {
+                        if (_activeVehicle.healthAndArmingCheckReport.canArm)
+                        {
                             if (_activeVehicle.healthAndArmingCheckReport.hasWarningsOrErrors) {
                                 statusrectDynamicColor1 = "#fdf1f90c"
                             } else {
@@ -611,10 +617,97 @@ Rectangle {
                 return mainStatusLabel._disconnectedText
             }
         }
-        QGCMouseArea {
+        // QGCMouseArea {
+        //     anchors.fill: parent
+        //     enabled:    _activeVehicle
+        //     onClicked:  mainWindow.showIndicatorPopup(mainStatusLabel, sensorStatusInfoComponent)
+        // }
+
+    }
+
+    // 底部进度条容器
+    Rectangle {
+        id: progressBarContainer
+        anchors {
+            top: seperator.bottom
+            horizontalCenter: seperator.horizontalCenter
+            topMargin: 10
+        }
+        height: 8.5
+        width: seperator.width
+        radius: height/2
+        color: "#40FFFFFF"
+        visible: !_initialDownloadComplete
+
+        // 动态进度条
+        Rectangle {
+            id: progressBar
+            anchors {
+                left: parent.left
+                top: parent.top
+                bottom: parent.bottom
+            }
+            width: _activeVehicle ?
+                Math.min(_activeVehicle.loadProgress * parent.width, parent.width) : 0
+            radius: parent.radius
+            color: "#2ecc71"
+
+            Behavior on width {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.OutQuint  // 更平滑的缓动曲线
+                }
+            }
+        }
+
+        // 添加细边框装饰
+        Rectangle {
             anchors.fill: parent
-            enabled:    _activeVehicle
-            onClicked:  mainWindow.showIndicatorPopup(mainStatusLabel, sensorStatusInfoComponent)
+            color: "transparent"
+            radius: parent.radius
+            border {
+                width: 1
+                color: "white"
+            }
+        }
+
+        // 百分比标签
+        Text {
+            id: progressText
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+                leftMargin: _activeVehicle ? Math.min(
+                    parent.width * _activeVehicle.loadProgress + 4,
+                    parent.width - width - 4
+                ) : 0
+            }
+            text: _activeVehicle ? Math.round(_activeVehicle.loadProgress * 100) + "%" : ""
+            color: "white"
+            visible: _activeVehicle ? (parent.visible && _activeVehicle.loadProgress > 0.05) : false
+
+            font {
+                family: "Microsoft JhengHei UI"
+                pixelSize: 8
+                bold: true
+                letterSpacing: 0.5
+            }
+        }
+
+        Text{
+            id: waitingText
+            anchors{
+                top: parent.bottom
+                horizontalCenter: parent.horizontalCenter
+                topMargin: 15
+            }
+            color : "white"
+            text: "Waiting For Connecting EBoat"
+            font {
+                family: "Microsoft JhengHei UI"
+                pixelSize: 20
+                bold: true
+            }
         }
     }
 
@@ -1293,6 +1386,9 @@ Rectangle {
                 id: alarmbtnimage
                 source: "/res/Alarm-White"
                 fillMode: Image.PreserveAspectFit // 保持图片比例
+            }
+            onClicked: {
+                alarmbtnclicked();
             }
         }
         z: 3

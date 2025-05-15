@@ -9,7 +9,7 @@
 
 import QtQuick                  2.3
 
-// Rectangle {
-//     anchors.fill:               parent
-//     color:                      Qt.rgba(0,0,0,0.75)
-// }
+Rectangle {
+    anchors.fill:               parent
+    color:                      Qt.rgba(0,0,0,0)
+}
