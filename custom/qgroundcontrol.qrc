@@ -290,8 +290,7 @@
         <file alias="QGroundControl/FlightDisplay/FlyViewInsetViewer.qml">../src/FlightDisplay/FlyViewInsetViewer.qml</file>
         <file alias="EBoat/EBoatLeftPanel.qml">qml/EBoat/EBoatLeftPanel.qml</file>
         <file alias="EBoat/EBoat3DModel.qml">qml/EBoat/EBoat3DModel.qml</file>
-        <file alias="EBoat/meshes/boat.mesh">meshes/boat.mesh</file>
-
+        <file alias="EBoat/EBoatCharge.qml">qml/EBoat/EBoatCharge.qml</file>
         <file alias="EBoat/meshes/nurbsToPoly51.mesh">meshes/nurbsToPoly51.mesh</file>
         <file alias="EBoat/meshes/nurbsToPoly56.mesh">meshes/nurbsToPoly56.mesh</file>
         <file alias="EBoat/meshes/nurbsToPoly61.mesh">meshes/nurbsToPoly61.mesh</file>
@@ -339,11 +338,7 @@
         <file alias="EBoat/meshes/polySurface3.mesh">meshes/polySurface3.mesh</file>
         <file alias="EBoat/meshes/polySurface42.mesh">meshes/polySurface42.mesh</file>
         <file alias="EBoat/meshes/polySurface65.mesh">meshes/polySurface65.mesh</file>
-
         <file alias="EBoat/qmldir">qml/EBoat/qmldir</file>
-
-
-
     </qresource>
     <qresource prefix="/FirstRunPromptDialogs">
         <file alias="UnitsFirstRunPrompt.qml">../src/FirstRunPromptDialogs/UnitsFirstRunPrompt.qml</file>

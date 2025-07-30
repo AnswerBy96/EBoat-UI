@@ -158,7 +158,19 @@ Rectangle {
 
     function alarmbtnclicked()
     {
+        if(alarmBtnState == 0)
+        {
+            alarmBtnState = 1;
+            alarmbtnimage.source = "/res/Alarm-Red"
+        }
+        else
+        {
+            alarmBtnState = 0;
+            alarmbtnimage.source = "/res/Alarm-White"
+        }
+
     }
+
 
     function automodeclicked(){
         if(autoModeState == 0 && swictchBtnState == 1)
@@ -446,7 +458,8 @@ Rectangle {
         // 电池内部填充区域
         Rectangle {
             id: batteryLevelDisplay
-            width: batteryContainer.width * eboat_batterysoc / 100 > 100 ? 100 : batteryContainer.width * eboat_batterysoc / 100
+            width: Math.min(batteryContainer.width * eboat_batterysoc / 100,
+                            batteryContainer.width * 0.95)
             height: batteryContainer.height * 0.95
             radius: 6
             // 低于20%时显示红色#33de33 f50e42

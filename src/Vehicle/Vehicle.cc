@@ -184,8 +184,15 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _terrainProtocolHandler       (new TerrainProtocolHandler(this, &_terrainFactGroup, this))
     , m_timestamp(0)
     , m_gear(0)
+    , m_gearLeft(0)
+    , m_gearRight(0)
+    , m_steeringWheel(0.0f)
     , m_eboatSpeed(0.0f)
     , m_eboatHeading(0.0f)
+    , m_eboatBatterySoc(0.0f)
+    , m_eboatBatteryCurrent(0.0f)
+    , m_eboatBatteryVoltage(0.0f)
+    , m_eboatBatteryState(0)
 {
     _linkManager = _toolbox->linkManager();
 
@@ -523,11 +530,17 @@ void Vehicle::_handlePX4ToUIData(mavlink_message_t &message)
     mavlink_msg_px4_to_ui_decode(&message, &msg);
     m_timestamp = msg.timestamp;
     m_gear = msg.gear;
+    m_gearLeft = msg.gear_left;
+    m_gearRight = msg.gear_right;
+    m_steeringWheel = msg.steering_wheel;
     m_eboatSpeed = msg.eboat_speed;
     m_eboatHeading = msg.eboat_heading;
 
     emit timestampChanged();
     emit gearChanged();
+    emit gearLeftChanged();
+    emit gearRightChanged();
+    emit steeringWheelChanged();
     emit eboatSpeedChanged();
     emit eboatHeadingChanged();
 }
@@ -538,8 +551,14 @@ void Vehicle::_handleEboatBatteryInfo(mavlink_message_t &message)
     mavlink_msg_battery_sensor_info_decode(&message, &msg);
     m_timestamp = msg.timestamp;
     m_eboatBatterySoc = msg.string_soc;
+    m_eboatBatteryCurrent = msg.string_current;
+    m_eboatBatteryVoltage = msg.string_voltage;
+    m_eboatBatteryState   = msg.battery_state;
 
     emit timestampChanged();
+    emit eboatBatteryCurrentChanged();
+    emit eboatBatteryVoltageChanged();
+    emit eboatBatteryStateChanged();
     emit eboatBatterySocChanged();
 }
 
@@ -4555,6 +4574,21 @@ quint8 Vehicle::gear() const
     return m_gear;
 }
 
+quint8 Vehicle::gearLeft() const
+{
+    return m_gearLeft;
+}
+
+quint8 Vehicle::gearRight() const
+{
+    return m_gearRight;
+}
+
+float Vehicle::steeringWheel() const
+{
+    return m_steeringWheel;
+}
+
 float Vehicle::eboatSpeed() const
 {
     return m_eboatSpeed;
@@ -4568,6 +4602,21 @@ float Vehicle::eboatHeading() const
 float Vehicle::eboatBatterySoc() const
 {
     return m_eboatBatterySoc;
+}
+
+float Vehicle::eboatBatteryCurrent() const
+{
+    return m_eboatBatteryCurrent;
+}
+
+float Vehicle::eboatBatteryVoltage() const
+{
+    return m_eboatBatteryVoltage;
+}
+
+quint8 Vehicle::eboatBatteryState() const
+{
+    return m_eboatBatteryState;
 }
 
 void Vehicle::uiToPX4Ignition(int ignition)

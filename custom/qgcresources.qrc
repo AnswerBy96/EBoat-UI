@@ -70,6 +70,7 @@
                 <file alias="Start-White">res/Images/Start-White.svg</file>
                 <file alias="Start-Green">res/Images/Start-Green.svg</file>
                 <file alias="Charging-White">res/Images/Charging-White.svg</file>
+                 <file alias="Charging-Green">res/Images/Charging-Green.svg</file>
                 <file alias="ocean">res/Images/ocean.png</file>
                 <file alias="headinglogo">res/Images/headinglogo.svg</file>
                 <file alias="Cruise-White">res/Images/Cruise-White.svg</file>

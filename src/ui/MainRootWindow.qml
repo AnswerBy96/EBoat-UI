@@ -86,6 +86,7 @@ ApplicationWindow {
         readonly property var       planMasterControllerFlyView:    flightView.planController
         readonly property var       guidedControllerFlyView:        flightView.guidedController
 
+
         property var                planMasterControllerPlanView:   null
         property var                currentPlanMissionItem:         planMasterControllerPlanView ? planMasterControllerPlanView.missionController.currentPlanViewItem : null
 
@@ -272,6 +273,15 @@ ApplicationWindow {
             _videoSettings.videoSource.rawValue = "Video Stream Disabled";
         }
 
+    }
+
+    property real eboatBatteryState: _activeVehicle? _activeVehicle.eboatBatteryState : 0
+
+    EBoatCharge{
+        id:_chargePanel
+        anchors.fill:parent
+        visible:eboatBatteryState == 1? true : false
+        //visible:true
     }
 
     //-------------------------------------------------------------------------

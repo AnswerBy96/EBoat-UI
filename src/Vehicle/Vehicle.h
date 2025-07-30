@@ -346,9 +346,15 @@ public:
     /// This is to receive data from PX4 EBOAT
     Q_PROPERTY(quint64 timestamp READ timestamp NOTIFY timestampChanged)
     Q_PROPERTY(quint8 gear READ gear NOTIFY gearChanged)
+    Q_PROPERTY(quint8 gearLeft READ gearLeft NOTIFY gearLeftChanged)
+    Q_PROPERTY(quint8 gearRight READ gearRight NOTIFY gearRightChanged)
+    Q_PROPERTY(float steeringWheel READ steeringWheel NOTIFY steeringWheelChanged)
     Q_PROPERTY(float eboatSpeed READ eboatSpeed NOTIFY eboatSpeedChanged)
     Q_PROPERTY(float eboatHeading READ eboatHeading NOTIFY eboatHeadingChanged)
     Q_PROPERTY(float eboatBatterySoc READ eboatBatterySoc NOTIFY eboatBatterySocChanged)
+    Q_PROPERTY(float eboatBatteryCurrent READ eboatBatteryCurrent NOTIFY eboatBatteryCurrentChanged)
+    Q_PROPERTY(float eboatBatteryVoltage READ eboatBatteryVoltage NOTIFY eboatBatteryVoltageChanged)
+    Q_PROPERTY(quint8 eboatBatteryState READ eboatBatteryState NOTIFY eboatBatteryStateChanged)
 
     /// Resets link status counters
     Q_INVOKABLE void resetCounters  ();
@@ -934,11 +940,23 @@ public:
 
     quint8 gear() const;
 
+    quint8 gearLeft() const;
+
+    quint8 gearRight() const;
+
+    float steeringWheel() const;
+
     float eboatSpeed() const;
 
     float eboatHeading() const;
 
     float eboatBatterySoc() const;
+
+    float eboatBatteryCurrent() const;
+
+    float eboatBatteryVoltage() const;
+
+    quint8 eboatBatteryState() const;
 
 public slots:
     void setVtolInFwdFlight                 (bool vtolInFwdFlight);
@@ -1056,11 +1074,23 @@ signals:
 
     void gearChanged();
 
+    void gearLeftChanged();
+
+    void gearRightChanged();
+
+    void steeringWheelChanged();
+
     void eboatSpeedChanged();
 
     void eboatHeadingChanged();
 
     void eboatBatterySocChanged();
+
+    void eboatBatteryCurrentChanged();
+
+    void eboatBatteryVoltageChanged();
+
+    void eboatBatteryStateChanged();
 
 private slots:
     void _mavlinkMessageReceived            (LinkInterface* link, mavlink_message_t message);
@@ -1554,9 +1584,15 @@ private:
     // Data
     quint64 m_timestamp;
     quint8 m_gear = 0;
+    quint8 m_gearLeft = 0;
+    quint8 m_gearRight = 0;
+    float m_steeringWheel = 0;
     float m_eboatSpeed = 0;
     float m_eboatHeading = 0;
     float m_eboatBatterySoc = 0;
+    float m_eboatBatteryCurrent = 0;
+    float m_eboatBatteryVoltage = 0;
+    quint8 m_eboatBatteryState = 0;
 };
 
 Q_DECLARE_METATYPE(Vehicle::MavCmdResultFailureCode_t)
