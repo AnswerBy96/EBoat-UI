@@ -45,6 +45,9 @@ Rectangle {
     property real eboat_speed: _activeVehicle? _activeVehicle.eboatSpeed : 0
     property int eboat_gear: _activeVehicle? _activeVehicle.gear : 0
     property real eboat_batterysoc: _activeVehicle? _activeVehicle.eboatBatterySoc : 0
+    property real eboat_steeringWheel: _activeVehicle? _activeVehicle.steeringWheel:0
+    property int eboat_leftgear: _activeVehicle? _activeVehicle.gearLeft : 0
+    property int eboat_rightgear: _activeVehicle? _activeVehicle.gearRight : 0
     property int mode : 0
     property var    _videoSettings:             QGroundControl.settingsManager.videoSettings
     property string videosettingsource:         _videoSettings.videoSource.rawValue
@@ -485,16 +488,6 @@ Rectangle {
         }
     }
 
-    // Image {
-    //     id: charginglogo
-    //     source: "/res/Charging-White"
-    //     fillMode: Image.PreserveAspectFit
-    //     scale: 0.2
-    //     anchors.left: leftpanel.right
-    //     anchors.leftMargin: -125
-    //     anchors.verticalCenter: batteryContainer.verticalCenter
-    // }
-
     property var    _vehicleInAir:      _activeVehicle ? _activeVehicle.flying || _activeVehicle.landing : false
     property bool   _vtolInFWDFlight:   _activeVehicle ? _activeVehicle.vtolInFwdFlight : false
     property bool   _armed:             _activeVehicle ? _activeVehicle.armed : false
@@ -506,17 +499,6 @@ Rectangle {
 
     property color  _mainStatusBGColor: qgcPal.brandingPurple
     property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
-
-    // Image{
-    //     id: vehiclestatus
-    //     source: "/res/status"
-    //     anchors.right: statusrect.left
-    //     anchors.rightMargin: 2
-    //     anchors.top: statusrect.top
-    //     anchors.bottom: statusrect.bottom
-    //     fillMode: Image.PreserveAspectFit
-    //     scale: 0.8
-    // }
 
     property  string  statusrectDynamicColor1: "#c7c1c1"
     property  string  statusrectDynamicColor2: "#000000"
@@ -545,7 +527,7 @@ Rectangle {
     }
 
     Text {
-        id:             mainStatusLabel
+        id:mainStatusLabel
         font.italic: true
         anchors.horizontalCenter: statusrect.horizontalCenter
         anchors.bottom: statusrect.bottom
@@ -814,6 +796,7 @@ Rectangle {
         anchors.horizontalCenter: leftpanel.horizontalCenter
         anchors.top: leftpanel.top;
         anchors.topMargin: 15
+        visible: manualModeState == 0?true:false
 
         Text {
             id: geartext
@@ -824,6 +807,89 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             color: "white"
             text: eboat_gear == 0? "P" : eboat_gear == 1? "N" : eboat_gear == 2? "R" : eboat_gear == 3? "D" : "P"
+        }
+    }
+
+    Row {
+        id: gearDisplay
+        spacing: 40 // 左右挡位显示之间的间距
+        anchors.horizontalCenter: leftpanel.horizontalCenter
+        anchors.top: leftpanel.top
+        anchors.topMargin: 10
+        visible:manualModeState == 1?true:false
+
+        // 左侧推杆挡位显示
+        Rectangle {
+            id: leftGear
+            width: 80
+            height: 80
+            color: "transparent"
+            radius: 15
+            border.color: "#827c7c"
+            border.width: 4
+
+            Text {
+                id: leftGearText
+                font {
+                    family: "Microsoft JhengHei UI"
+                    bold: true
+                    pixelSize: 37
+                }
+                anchors.centerIn: parent
+                color: "white"
+                text: eboat_leftgear == 0? "P" : eboat_leftgear == 1? "N" : eboat_leftgear == 2? "R" : eboat_leftgear == 3? "D" : "P"
+            }
+
+            // 左侧标识
+            Text {
+                text: "L"
+                color: "#FF9900"
+                font.family: "Microsoft JhengHei UI"
+                font.bold: true
+                font.pixelSize: 18
+                anchors {
+                    top: parent.top
+                    topMargin: 2
+                    horizontalCenter: parent.horizontalCenter
+                }
+            }
+        }
+
+        // 右侧推杆挡位显示
+        Rectangle {
+            id: rightGear
+            width: 80
+            height: 80
+            color: "transparent"
+            radius: 15
+            border.color: "#827c7c"
+            border.width: 4
+
+            Text {
+                id: rightGearText
+                font {
+                    family: "Microsoft JhengHei UI"
+                    bold: true
+                    pixelSize: 37
+                }
+                anchors.centerIn: parent
+                color: "white"
+                text: eboat_rightgear == 0? "P" : eboat_rightgear == 1? "N" : eboat_rightgear == 2? "R" : eboat_rightgear == 3? "D" : "P"
+            }
+
+            // 右侧标识
+            Text {
+                text: "R"
+                color: "#0099FF"
+                font.family: "Microsoft JhengHei UI"
+                font.bold: true
+                font.pixelSize: 18
+                anchors {
+                    top: parent.top
+                    topMargin: 2
+                    horizontalCenter: parent.horizontalCenter
+                }
+            }
         }
     }
 
@@ -886,6 +952,188 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Item {
+        id: steeringWheelItem
+        width: 220
+        height: 220
+        anchors {
+            top: seperator.top
+            topMargin: 15
+            horizontalCenter: seperator.horizontalCenter
+        }
+        visible:manualModeState == 1?true:false
+
+        Item {
+            id: steeringWheel
+            width: 170
+            height: 170
+            anchors.centerIn: parent
+            rotation: rotationAngle
+            transformOrigin: Item.Center
+
+            property real rotationAngle: eboat_steeringWheel
+
+            // 方向盘角度变化动画
+            Behavior on rotationAngle {
+                NumberAnimation {
+                    duration: 1500 // 平滑过渡时间（毫秒）
+                    easing.type: Easing.OutQuad
+                }
+            }
+
+            // 方向盘外圈 - 金属质感
+            Rectangle {
+                id: wheelOuter
+                width: parent.width
+                height: parent.height
+                radius: width/2
+                border.width: 12
+                border.color: "#ffffff"
+                color: "transparent"
+            }
+
+            // 三根幅条（120度间隔）
+            Repeater {
+                model: 3
+                Item {
+                    // 幅条主干
+                    Rectangle {
+                        id: spoke
+                        width: 11
+                        height: wheelOuter.width * 0.43
+                        color: "#d0d0d0"
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        // 幅条渐变
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: "#a0a0a0" }
+                            GradientStop { position: 0.5; color: "#f0f0f0" }
+                            GradientStop { position: 1.0; color: "#a0a0a0" }
+                        }
+                    }
+
+                    // 位置和旋转
+                    rotation: index * 120 + 180
+                    anchors.centerIn: parent
+                }
+            }
+
+            // 中心圆盘
+            Item {
+                id: centerCircle
+                width: parent.width * 0.3
+                height: width
+                anchors.centerIn: parent
+                z: 1
+
+                // 中心圆盘主体
+                Rectangle {
+                    id: centerBase
+                    anchors.fill: parent
+                    radius: width/2
+                    color: "#fff9f9"
+
+                    // 金属边框
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: parent.radius
+                        color: "transparent"
+                        border.width: 3
+                        border.color: "#b0b0b0"
+                    }
+                }
+            }
+
+            // 方向指示标记
+            Rectangle {
+                width: 12
+                height: 12
+                color: "#ff3355"
+                radius: 2
+                rotation: 45
+                anchors {
+                    top: parent.top
+                    topMargin: 5
+                    horizontalCenter: parent.horizontalCenter
+                }
+                z: 2
+
+                // 动画效果
+                SequentialAnimation on opacity {
+                    running: steeringWheel.rotationAngle !== 0
+                    loops: Animation.Infinite
+                    NumberAnimation { from: 0.5; to: 1.0; duration: 500; easing.type: Easing.InOutQuad }
+                    NumberAnimation { from: 1.0; to: 0.5; duration: 500; easing.type: Easing.InOutQuad }
+                }
+            }
+        }
+
+        // 显示当前角度
+        Text {
+            anchors {
+                verticalCenter: steeringWheel.verticalCenter
+                horizontalCenter: steeringWheel.horizontalCenter
+            }
+            text: Math.round(steeringWheel.rotationAngle) + "°"
+            font.pixelSize: 17
+            font.family: "Microsoft JhengHei UI"
+            font.bold: true
+
+            // 颜色根据方向变化
+            color: {
+                if (steeringWheel.rotationAngle > 0) return "#0099FF"
+                if (steeringWheel.rotationAngle < 0) return "#FF9900"
+                return "white"
+            }
+        }
+
+        // 方向指示文字
+        Text {
+            anchors {
+                bottom: steeringWheel.top
+                bottomMargin: 10
+                horizontalCenter: steeringWheel.horizontalCenter
+            }
+            text: {
+                if (steeringWheel.rotationAngle > 90) return "HARD RIGHT"
+                if (steeringWheel.rotationAngle > 1) return "RIGHT"
+                if (steeringWheel.rotationAngle < -90) return "HARD LEFT"
+                if (steeringWheel.rotationAngle < -1) return "LEFT"
+                return "STRAIGHT"
+            }
+            font.pixelSize: 20
+            font.family: "Microsoft JhengHei UI"
+            font.bold: true
+            color: {
+                if (steeringWheel.rotationAngle > 0) return "#0099FF"
+                if (steeringWheel.rotationAngle < 0) return "#FF9900"
+                return "#ffffff"
+            }
+        }
+
+        // 动画 - 仅示范
+        // SequentialAnimation {
+        //     running: true
+        //     loops: Animation.Infinite
+        //     NumberAnimation {
+        //         target: steeringWheel
+        //         property: "rotationAngle"
+        //         from: -540
+        //         to: 540
+        //         duration: 8000
+        //         easing.type: Easing.InOutQuad
+        //     }
+        //     NumberAnimation {
+        //         target: steeringWheel
+        //         property: "rotationAngle"
+        //         from: 540
+        //         to: -540
+        //         duration: 8000
+        //         easing.type: Easing.InOutQuad
+        //     }
+        // }
     }
 
     Item {
