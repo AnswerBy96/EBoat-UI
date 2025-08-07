@@ -2,5 +2,4 @@
 
 
 EBoat-UI-Mavlink(submoudle):
-https://github.com/RongsSiJu/EBoat-MavLink
-
+https://github.com/RongSJ/EBoat-UI-MavLink
