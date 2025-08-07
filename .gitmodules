@@ -27,6 +27,6 @@
 	url = https://github.com/ArduPilot/ArduPilot-Parameter-Repository
 
 [submodule "libs/mavlink/include/mavlink/v2.0"]
-	url = https://github.com/RongsSiJu/EBoat-MavLink.git
-	path = "libs/mavlink/include/mavlink/v2.0"
+	url = https://github.com/RongSJ/EBoat-UI-MavLink
+	path = "libs/mavlink/include/mu/EBoat-avlink/v2.0"
 	branch = EBoat-MavLink-Dev
